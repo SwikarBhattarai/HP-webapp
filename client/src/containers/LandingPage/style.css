@@ -1,0 +1,10 @@
+
+html,body{
+  height:auto;
+  width:auto;
+}
+
+
+.ant-carousel .slick-slide h3 {
+  color: #fff;
+}
