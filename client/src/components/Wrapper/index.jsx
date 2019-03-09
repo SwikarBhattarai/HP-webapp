@@ -6,10 +6,27 @@ export const Wrapper =
       {...props}
       className={[classes, className || ''].join(' ')}
       style={{
-        flex: 1,
-        marginTop:50,
-        marginLeft:20,
-        marginRight:20,
+        flex:1,
+        marginTop:20,
+        marginLeft:65,
+        marginRight:65,
+        marginBottom:20,
+
+        ...(style || {}),
+      }}
+    >
+      {children}
+    </div>
+  )
+
+  export const ContentDiv = 
+  ({ classes, className, style, children, ...props }) => (
+    <div
+      {...props}
+      className={[classes, className || ''].join(' ')}
+      style={{
+        marginTop:20,
+     
 
         ...(style || {}),
       }}
@@ -22,8 +39,9 @@ export const Title = ({ children, ...props }) => (
     <div
       {...props}
       style={{
+        marginTop:20,
         color: '#383838',
-        fontSize: 25,
+        fontSize: 22,
       }}
     >
       {children}

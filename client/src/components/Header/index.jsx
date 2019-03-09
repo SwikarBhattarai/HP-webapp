@@ -13,7 +13,7 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 const menu = (
-  <Menu style={{right:50}}>
+  <Menu>
     <Menu.Item>
       <a  rel="noopener noreferrer" href="http://www.alipay.com/">My Profile</a>
     </Menu.Item>
@@ -68,7 +68,7 @@ class Header extends React.Component {
         return (
         
 
-        <Menu.Item key="signup" style={{position:'absolute', right:0}} >
+        <Menu.Item key="signup" style={{float:'right'}} >
           <a onClick={this.showModal}>Sign in / Sign up</a>
         </Menu.Item>
         
@@ -82,7 +82,7 @@ class Header extends React.Component {
             <Menu.Item key="credits">
               <Button color="primary" style={{fontSize:16, color:'red', fontWeight:'bold'}}>Credits:{' '}{this.props.auth.credits}</Button>
             </Menu.Item>,
-            <Menu.Item key="profile" style={{position:'absolute', right:50}} >
+            <Menu.Item key="profile" style={{float:'right'}}>
               <Dropdown overlay={menu}>
                   <Icon type="user" style={{color:'white', fontSize:16}} />
               </Dropdown>

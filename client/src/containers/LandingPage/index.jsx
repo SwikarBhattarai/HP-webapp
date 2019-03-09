@@ -1,6 +1,4 @@
 import React from 'react'
-import {Affix} from 'antd'
-import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 import {Wrapper} from '../../components/Wrapper'
 import Carousel1 from '../../assets/carousel1.jpg'

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import  * as actions from '../../actions'
 
 import Header from '../../components/Header'
+import Footer from '../../components/Footer'
 import Landing from '../LandingPage'
 import StudentHomePage from '../StudentHomePage'
 
@@ -69,14 +70,9 @@ class App extends Component {
       <div className="app">
         <BrowserRouter>
           <React.Fragment>
-          <Affix>
           <Header />
-          </Affix>
-          
-       
-           
-           {this.renderRoute()}
-    
+              {this.renderRoute()}
+           <Footer />
           </React.Fragment>
         </BrowserRouter>
       </div>
