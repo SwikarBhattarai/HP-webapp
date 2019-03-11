@@ -80,7 +80,7 @@ class Header extends React.Component {
               <Payments />
             </Menu.Item>,
             <Menu.Item key="credits">
-              <Button color="primary" style={{fontSize:16, color:'red', fontWeight:'bold'}}>Credits:{' '}{this.props.auth.credits}</Button>
+              <Button color="primary" style={{fontSize:16, color:'black', fontWeight:'bold'}}>{this.props.auth.credits}&nbsp;Credits</Button>
             </Menu.Item>,
             <Menu.Item key="profile" style={{float:'right'}}>
               <Dropdown overlay={menu}>
@@ -151,86 +151,6 @@ class Header extends React.Component {
     );
   }
 }
-
-
-
-
-// class Header extends Component {
-//   constructor(props) {
-//     super(props)
-
-//     this.toggle = this.toggle.bind(this)
-//     this.state = {
-//       isOpen: false
-//     }
-//   }
-//   toggle() {
-//     this.setState({
-//       isOpen: !this.state.isOpen
-//     })
-//   }
- 
-//   renderContent(){
-//     switch(this.props.auth){
-//       case null:
-//         return 
-//       case false:
-//         return (
-//           <div className="nav">
-
-//           <NavLink href="/auth/google"><Button color="info">Login</Button></NavLink>
-//           </div>
-//         )     
-//       default:
-//         return [
-//           <div style={{display:'flex'}} key="1">
-//             <NavLink><Payments/></NavLink>,
-//             <NavLink><Button>Credits: {this.props.auth.credits}</Button></NavLink>,
-//             <NavLink href="api/logout"><Button color="danger">Logout</Button></NavLink>
-//           </div>  
-        
-//         ] 
-//     }
-//   }
-
-//   render() {
-//     return (
-//       <div>
-//         <Navbar color="navbar navbar-dark bg-dark" expand="md">
-//           <NavbarBrand><Link to={this.props.auth ? '/home' : '/'} style={{textDecoration:'none', color:'white'}}>Hamro Paathsala</Link></NavbarBrand>
-//           <NavbarToggler onClick={this.toggle} />
-//           <Collapse isOpen={this.state.isOpen} navbar>
-//             <Nav className="ml-auto" navbar>
-//               {/* <NavItem>
-//                 <NavLink href="/">Getting Started</NavLink>
-//               </NavItem> */}
-//               <NavItem>
-//                 {this.renderContent()}
-//               </NavItem>
-//               {/* <UncontrolledDropdown nav inNavbar>
-//                 <DropdownToggle nav caret>
-//                   Options
-//                 </DropdownToggle>
-//                 <DropdownMenu right>
-//                   <DropdownItem>
-//                     Option 1
-//                   </DropdownItem>
-//                   <DropdownItem>
-//                     Option 2
-//                   </DropdownItem>
-//                   <DropdownItem divider />
-//                   <DropdownItem>
-//                     Reset
-//                   </DropdownItem>
-//                 </DropdownMenu>
-//               </UncontrolledDropdown> */}
-//             </Nav>
-//           </Collapse>
-//         </Navbar>
-//       </div>
-//     )
-//   }
-// }
 
 function mapStateToProps({ auth }){
   return { auth };
