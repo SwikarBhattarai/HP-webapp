@@ -23,7 +23,7 @@ const data = [
   {
     title:'Node JS Complete Course',
     teacherName:'Bipin Neupane',
-    price:80,
+    price:2,
     status:'unlocked',
     addedDate:'2019/01/01',
     videosCount:30,
@@ -35,7 +35,7 @@ const data = [
   {
     title:'Spring Complete Course',
     teacherName:'Amresh Thakur',
-    price:100,
+    price:5,
     status:'locked',
     addedDate:'2019/02/02',
     videosCount:30,
@@ -47,7 +47,7 @@ const data = [
   {
     title:'Php Complete Course',
     teacherName:'Khiman Thapa',
-    price:30,
+    price:3,
     status:'unlocked',
     addedDate:'2018/01/03',
     videosCount:30,
@@ -59,7 +59,7 @@ const data = [
   {
     title:'React JS Complete Course',
     teacherName:'Swikar Bhattarai',
-    price:30,
+    price:5,
     status:'locked',
     addedDate:'2018/01/01',
     videosCount:30,
@@ -71,7 +71,7 @@ const data = [
   {
     title:'Node JS Complete Course',
     teacherName:'Bipin Neupane',
-    price:80,
+    price:8,
     status:'unlocked',
     addedDate:'2019/01/01',
     videosCount:30,
@@ -83,7 +83,7 @@ const data = [
   {
     title:'Spring Complete Course',
     teacherName:'Amresh Thakur',
-    price:100,
+    price:10,
     status:'locked',
     addedDate:'2019/02/02',
     videosCount:30,
@@ -95,7 +95,7 @@ const data = [
   {
     title:'Php Complete Course',
     teacherName:'Khiman Thapa',
-    price:30,
+    price:3,
     status:'unlocked',
     addedDate:'2018/01/03',
     videosCount:30,

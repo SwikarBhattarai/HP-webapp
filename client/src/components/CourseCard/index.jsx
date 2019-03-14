@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
-import { Card, Icon, Avatar, Modal, Button } from 'antd'
+import { Card, Icon, Avatar, Modal, Button,  Spin } from 'antd'
 import { deductCredit } from '../../actions';
 import {connect} from 'react-redux'
+import './style.css'
 
 class CourseCard extends Component {
 
@@ -26,12 +27,21 @@ class CourseCard extends Component {
   }
 
   handleUnlock=(e)=>{
-    console.log(e)
+    const amount = this.props.auth.credits
+    const diffAmount = amount- this.props.price
+    this.props.deductCredit(diffAmount)
     this.setState({
-      amount:this.props.auth.credits - 1
+      amount:this.props.auth.credits- this.props.price,
+      visible:false,
     })
-
-    deductCredit(this.state.amount)
+    // eslint-disable-next-line no-unused-expressions
+    this.props.deductCredit ?
+    window.location.reload()
+    :
+    <div className='example'>
+      <Spin />
+    
+    </div>
     
   }
 
@@ -44,7 +54,6 @@ class CourseCard extends Component {
 
   render() {
     const { Meta } = Card;
-    console.log('features', this.props.features)
     return (
       <div>
         <Card
@@ -96,11 +105,11 @@ class CourseCard extends Component {
   }
 }
 
-function mapStateToProps(auth) {
-  return {auth}
+function mapStateToProps({ auth }){
+  return { auth };
 }
 
 const mapDispatchToProps = dispatch =>({
   deductCredit: (amount) => dispatch(deductCredit(amount))
 })
-export default withRouter(connect(mapStateToProps) (CourseCard))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CourseCard))

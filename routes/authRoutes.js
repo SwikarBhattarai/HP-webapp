@@ -1,5 +1,6 @@
 const passport = require('passport')
 var User = require("../models/User")
+const apiUrl="/api/current_user"
 module.exports = (app) => {
     app.get('/auth/google', passport.authenticate('google',{
       scope: ['profile', 'email'],
@@ -26,9 +27,15 @@ module.exports = (app) => {
     })
 
     app.get('/api/current_user', (req,res) =>{
-      console.log('credits', req.params.amount)
      res.send(req.user)
 
+    })
+
+    app.post(`/api/current_user/update`, async (req,res) =>{
+      req.user.credits = req.body.amount;
+      console.log(req.user.credits)
+      const user = await req.user.save()
+      res.send(user)
     })
 
     app.post('/signup', (req,res) =>{

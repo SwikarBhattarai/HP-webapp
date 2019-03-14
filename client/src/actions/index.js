@@ -14,6 +14,6 @@ export const handleToken = (token) => async dispatch =>{
 }
 
 export const deductCredit = (amount) => async dispatch =>{
-  const res = await axios.post('/api/current_user', amount)
+  const res = await axios.post(`/api/current_user/update`, {amount})
   dispatch({type:DEDUCT_CREDIT, payload:res.data})
 }
