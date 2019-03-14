@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 import { Card, Icon, Avatar, Modal, Button } from 'antd'
-
+import { deductCredit } from '../../actions';
+import {connect} from 'react-redux'
 
 class CourseCard extends Component {
 
-  state={visible:false}
+  state={visible:false, amount:0}
 
   showModal = (e) =>{
     if(this.props.status ==="unlocked"){
@@ -26,6 +27,12 @@ class CourseCard extends Component {
 
   handleUnlock=(e)=>{
     console.log(e)
+    this.setState({
+      amount:this.props.auth.credits - 1
+    })
+
+    deductCredit(this.state.amount)
+    
   }
 
   handleCancel = (e) => {
@@ -88,4 +95,12 @@ class CourseCard extends Component {
     )
   }
 }
-export default withRouter (CourseCard)
+
+function mapStateToProps(auth) {
+  return {auth}
+}
+
+const mapDispatchToProps = dispatch =>({
+  deductCredit: (amount) => dispatch(deductCredit(amount))
+})
+export default withRouter(connect(mapStateToProps) (CourseCard))

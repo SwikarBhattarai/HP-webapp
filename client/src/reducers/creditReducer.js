@@ -1,9 +1,9 @@
-import { UNLOCK_COURSE } from '../actions/types'
+import { DEDUCT_CREDIT } from '../actions/types'
 
 export default function(state = [], action) {
   
   switch(action.type){
-    case UNLOCK_COURSE:
+    case DEDUCT_CREDIT:
       return action.payload || false
     default:
       return state;

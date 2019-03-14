@@ -8,7 +8,6 @@ import './style.css'
 import Payments from '../Payments'
 import LoginPage from '../LoginPage'
 
-
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
@@ -55,6 +54,8 @@ class Header extends React.Component {
       current:'logo'
     });
   }
+
+
  
 
  
@@ -100,7 +101,10 @@ class Header extends React.Component {
   
    
     return (
-      <Header>
+      <div style={{paddingTop:65}}>
+      <Header style={{ position: 'fixed', width: '100%', 
+      top: 0, zIndex:1, paddingBottom:65
+      }}>
         <Menu
         onClick={this.handleClick}
         selectedKeys={[this.state.current]}
@@ -147,7 +151,9 @@ class Header extends React.Component {
           
         </Modal>
       </Header>
-      
+
+      </div>
+
     );
   }
 }
@@ -156,5 +162,7 @@ function mapStateToProps({ auth }){
   return { auth };
 }
 
-export default connect (mapStateToProps) (Header)
+
+
+export default connect (mapStateToProps)(Header)
 

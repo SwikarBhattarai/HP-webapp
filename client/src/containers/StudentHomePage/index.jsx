@@ -56,6 +56,54 @@ const data = [
     description:'Learn modern php and be the best.',
     features:['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4', 'Feature 5'],
   },
+  {
+    title:'React JS Complete Course',
+    teacherName:'Swikar Bhattarai',
+    price:30,
+    status:'locked',
+    addedDate:'2018/01/01',
+    videosCount:30,
+    totalDuration:24,
+    level:'All Level',
+    description:'Learn modern react js and be the best.',
+    features:['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4', 'Feature 5'],
+  },
+  {
+    title:'Node JS Complete Course',
+    teacherName:'Bipin Neupane',
+    price:80,
+    status:'unlocked',
+    addedDate:'2019/01/01',
+    videosCount:30,
+    totalDuration:24,
+    level:'Intermediate',
+    description:'Learn modern node js and be the best.',
+    features:['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4', 'Feature 5'],
+  },
+  {
+    title:'Spring Complete Course',
+    teacherName:'Amresh Thakur',
+    price:100,
+    status:'locked',
+    addedDate:'2019/02/02',
+    videosCount:30,
+    totalDuration:24,
+    level:'Beginner',
+    description:'Learn modern spring and be the best.',
+    features:['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4', 'Feature 5'],
+  },
+  {
+    title:'Php Complete Course',
+    teacherName:'Khiman Thapa',
+    price:30,
+    status:'unlocked',
+    addedDate:'2018/01/03',
+    videosCount:30,
+    totalDuration:24,
+    level:'Beginner',
+    description:'Learn modern php and be the best.',
+    features:['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4', 'Feature 5'],
+  },
 ]
 
 
@@ -76,7 +124,7 @@ const unlockedCourse = data.filter((course) =>(
         <ContentDiv>
           <List
              grid={{
-              gutter:16, column:4
+              gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3,
             }}
             dataSource={unlockedCourse}
             renderItem={item => (
@@ -92,7 +140,7 @@ const unlockedCourse = data.filter((course) =>(
         <ContentDiv>
           <List
              grid={{
-              gutter:16, column:4
+              gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3,
             }}
             dataSource={data}
             renderItem={item => (
@@ -119,7 +167,7 @@ const unlockedCourse = data.filter((course) =>(
         <ContentDiv >
         <List
              grid={{
-              gutter:16, column:4
+              gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3,
             }}
             dataSource={data}
             renderItem={item => (

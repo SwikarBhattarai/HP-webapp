@@ -26,6 +26,7 @@ module.exports = (app) => {
     })
 
     app.get('/api/current_user', (req,res) =>{
+      console.log('credits', req.params.amount)
      res.send(req.user)
 
     })
