@@ -33,7 +33,6 @@ module.exports = (app) => {
 
     app.post(`/api/current_user/update`, async (req,res) =>{
       req.user.credits = req.body.amount;
-      console.log(req.user.credits)
       const user = await req.user.save()
       res.send(user)
     })

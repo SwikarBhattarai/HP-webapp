@@ -6,7 +6,7 @@ import './style.css'
 
 import Payments from '../Payments'
 import LoginPage from '../LoginPage'
-
+import {withRouter} from 'react-router-dom'
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
@@ -114,7 +114,7 @@ class Header extends React.Component {
         >
         
         <Menu.Item key="logo" style={{fontSize:16, color:'white'}}>
-          <a href="#" style={{color:'white'}}><Icon type="smile" />Hamro Paathsala</a>
+          <a  style={{color:'white'}} onClick={() => this.props.auth ? this.props.history.push('/home') : this.props.history.push('/')}><Icon type="smile" />Hamro Paathsala</a>
         </Menu.Item>
        
         <SubMenu style={{fontSize:16, color:'white'}} title={<span className="submenu-title-wrapper"><Icon type="heart" />Courses</span>}>
@@ -163,5 +163,5 @@ function mapStateToProps({ auth }){
 
 
 
-export default connect (mapStateToProps)(Header)
+export default withRouter(connect (mapStateToProps)(Header))
 

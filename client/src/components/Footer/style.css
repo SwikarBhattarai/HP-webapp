@@ -1,11 +1,6 @@
 
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-}
+
 .footer {
-  position: absolute;
-  bottom: 0;
   width: 100%;
   color:#FFFFFF;
   background-color:#001529;

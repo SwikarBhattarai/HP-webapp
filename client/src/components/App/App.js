@@ -3,14 +3,15 @@ import { BrowserRouter, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import  * as actions from '../../actions'
 
-import Header from '../../components/Header'
-import Footer from '../../components/Footer'
+import Header from '../Header'
 import Landing from '../LandingPage'
 import StudentHomePage from '../StudentHomePage'
+import StudentCourseVideoPage from '../StudentCourseVideoPage'
 
 
 import './app.css'
 import { Affix } from 'antd';
+import FooterNav from '../Footer';
 
 const AdminHomePage = () =>(
   <div>
@@ -49,8 +50,11 @@ class App extends Component {
         )
       }else{
         return(
-
-          <Route path="/home" component={StudentHomePage} />
+          [
+            <Route exact key="home" path="/home" component={StudentHomePage} />,
+            <Route exact key="video" path="/courseId" component={StudentCourseVideoPage} />
+          ]
+          
         )
       }
     }else{
@@ -72,7 +76,8 @@ class App extends Component {
           <React.Fragment>
           <Header />
               {this.renderRoute()}
-           <Footer />
+            
+           <FooterNav />
           </React.Fragment>
         </BrowserRouter>
       </div>

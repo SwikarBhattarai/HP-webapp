@@ -1,6 +1,5 @@
 import React from 'react'
-import Footer from '../../components/Footer'
-import {Wrapper} from '../../components/Wrapper'
+import {Wrapper} from '../Wrapper'
 import Carousel1 from '../../assets/carousel1.jpg'
 import Carousel2 from '../../assets/carousel2.jpg'
 import Carousel3 from '../../assets/carousel3.jpg'
@@ -30,7 +29,7 @@ class Landing extends React.Component {
           <Title level={2}>New Courses</Title>
           </Wrapper>
          </Content>
-         <Footer />
+         
         </Layout>
         
       </div>

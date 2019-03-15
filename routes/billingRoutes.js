@@ -12,7 +12,7 @@ module.exports = app => {
       source:req.body.id,
     })
     
-    req.user.credits += 5
+    req.user.credits += 20
     const user = await req.user.save()
 
     res.send(user)

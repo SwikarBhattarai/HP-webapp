@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import {Wrapper, ContentDiv, Title} from '../../components/Wrapper'
+import {Wrapper, ContentDiv, Title} from '../Wrapper'
 import {List} from 'antd';
+import { withRouter } from 'react-router-dom';
 
 import './style.css'
 
 
-import CourseCard from '../../components/CourseCard'
+import CourseCard from '../CourseCard'
 
 const data = [
   {
@@ -124,7 +125,7 @@ const unlockedCourse = data.filter((course) =>(
         <ContentDiv>
           <List
              grid={{
-              gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3,
+              gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 3,
             }}
             dataSource={unlockedCourse}
             renderItem={item => (
