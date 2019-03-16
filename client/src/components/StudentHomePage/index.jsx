@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {Wrapper, ContentDiv, Title} from '../Wrapper'
 import {List} from 'antd';
 import { withRouter } from 'react-router-dom';
+import {connect} from 'react-redux'
 
 import './style.css'
 
@@ -120,7 +121,7 @@ const unlockedCourse = data.filter((course) =>(
   render() {
     return (
       <Wrapper>
-        <h1>Welcome User,</h1>
+        <h1>Welcome {this.props.auth.name.givenName},</h1>
         <Title>Unlocked Courses!</Title>
         <ContentDiv>
           <List
@@ -186,4 +187,8 @@ const unlockedCourse = data.filter((course) =>(
   }
 }
 
-export default StudentHomePage
+const mapStateToProps =({auth}) =>(
+  {auth}
+)
+
+export default withRouter(connect(mapStateToProps)(StudentHomePage))

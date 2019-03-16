@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 
 import { Layout, Menu, Icon, Modal, Button, Dropdown} from 'antd'
 import './style.css'
-
 import Payments from '../Payments'
 import LoginPage from '../LoginPage'
 import {withRouter} from 'react-router-dom'
@@ -54,12 +53,9 @@ class Header extends React.Component {
     });
   }
 
-
- 
-
- 
-
     renderContent(){
+
+      console.log('auth', this.props.auth)
     
     switch(this.props.auth){
       case null:

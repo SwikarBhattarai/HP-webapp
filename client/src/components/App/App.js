@@ -7,7 +7,7 @@ import Header from '../Header'
 import Landing from '../LandingPage'
 import StudentHomePage from '../StudentHomePage'
 import StudentCourseVideoPage from '../StudentCourseVideoPage'
-
+import {Layout} from 'antd'
 
 import './app.css'
 import { Affix } from 'antd';
@@ -69,16 +69,18 @@ class App extends Component {
     if(this.props.auth){
       console.log(this.props.auth.isAdmin)
     }
+    const {Footer, Content} = Layout
   
     return (
       <div className="app">
         <BrowserRouter>
-          <React.Fragment>
-          <Header />
+          <Layout>
+            <Header />
+              <Content>
               {this.renderRoute()}
-            
-           <FooterNav />
-          </React.Fragment>
+              </Content>
+            <FooterNav />   
+          </Layout>
         </BrowserRouter>
       </div>
     )

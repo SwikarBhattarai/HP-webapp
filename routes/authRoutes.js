@@ -1,9 +1,8 @@
 const passport = require('passport')
 var User = require("../models/User")
-const apiUrl="/api/current_user"
 module.exports = (app) => {
     app.get('/auth/google', passport.authenticate('google',{
-      scope: ['profile', 'email'],
+      scope: ['profile', 'email','https://www.googleapis.com/auth/userinfo.profile'],
     }))
     
     app.get('/auth/google/callback', passport.authenticate('google'),

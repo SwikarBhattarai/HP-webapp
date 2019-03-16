@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Icon, Avatar, Modal, Button, Spin, notification } from 'antd';
-import { deductCredit } from '../../actions';
+import { deductCredit,fetchUser } from '../../actions';
 import { connect } from 'react-redux';
 import './style.css';
 
@@ -34,24 +34,24 @@ class CourseCard extends Component {
   };
 
   handleUnlock = e => {
+    this.props.fetchUser()
     const amount = this.props.auth.credits;
     const diffAmount = amount - this.props.price;
+
+    console.log('amount', amount);
+    console.log('price', this.props.price);
     this.props.deductCredit(diffAmount);
     this.setState({
       amount: this.props.auth.credits - this.props.price,
       visible: false,
     });
-    if(this.props.deductCredit){
-      openNotification('success')
-      setTimeout(() =>{
-        window.location.reload() 
-      }, 3000)
+    this.props.fetchUser()
+    openNotification('success')
+  
      
-    }else{
-      return (
-        <Spin />
-      )
-    }
+      
+     
+   
     
   };
 
@@ -66,6 +66,7 @@ class CourseCard extends Component {
     return (
       <div>
         <Card
+          bordered
           size='default'
           onClick={this.showModal}
           hoverable
@@ -147,6 +148,7 @@ function mapStateToProps({ auth }) {
 
 const mapDispatchToProps = dispatch => ({
   deductCredit: amount => dispatch(deductCredit(amount)),
+  fetchUser: () => dispatch(fetchUser()),
 });
 export default withRouter(
   connect(
