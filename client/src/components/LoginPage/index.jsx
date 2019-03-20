@@ -49,8 +49,8 @@ class NormalLoginForm extends React.Component {
           <Button type="primary" htmlType="submit" className="login-form-button">
             Log in
           </Button>
-          <Button type="danger" href={this.props.href}  className="login-form-button">
-            Log in with Google
+          <Button style={{backgroundColor:'#DB4437', color:'white'}} href={this.props.href} className="button"  className="login-form-button">
+            <Icon type="google"/>LOG IN WITH GOOGLE
           </Button>
         </Form.Item>
       </Form>

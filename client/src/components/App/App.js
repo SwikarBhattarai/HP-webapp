@@ -1,23 +1,22 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
-import  * as actions from '../../actions'
-
+import  {fetchUser}  from '../../actions'
+import FooterNav from '../Footer';
 import Header from '../Header'
 import Landing from '../LandingPage'
 import StudentHomePage from '../StudentHomePage'
 import StudentCourseVideoPage from '../StudentCourseVideoPage'
+
+
+import AdminHomePage from '../AdminHomePage'
 import {Layout} from 'antd'
 
 import './app.css'
 import { Affix } from 'antd';
-import FooterNav from '../Footer';
+import AddCourse from '../AddCourse';
 
-const AdminHomePage = () =>(
-  <div>
-    This is Admin Home Page
-  </div>
-)
+
 
 const TeacherHomePage = () =>(
   <div>
@@ -39,8 +38,11 @@ class App extends Component {
     
       if(this.props.auth.isAdmin){
         return(
-         
-          <Route path = "/home" component ={AdminHomePage} />
+         [
+          <Route path = "/home" component ={AdminHomePage} />,
+          <Route path = "/add-course" component = {AddCourse} />
+         ]
+          
         
         )
       }
@@ -69,7 +71,7 @@ class App extends Component {
     if(this.props.auth){
       console.log(this.props.auth.isAdmin)
     }
-    const {Footer, Content} = Layout
+    const { Content} = Layout
   
     return (
       <div className="app">
@@ -87,8 +89,12 @@ class App extends Component {
   }
 }
 
-function mapStateToProps({ auth }){
-  return { auth };
-}
+const mapStateToProps = ({auth}) =>(
+  { auth }
+)
 
-export default connect(mapStateToProps, actions) (App)
+const mapDispatchToProps = dispatch => ({
+  fetchUser: () => dispatch(fetchUser()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps) (App)

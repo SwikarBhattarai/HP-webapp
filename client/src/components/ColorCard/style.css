@@ -1,0 +1,18 @@
+.card1{
+  background: linear-gradient(to bottom, #cc6699 0%, #ff3399 100%);
+  text-align:center;
+  width:300px;
+  border-radius: 2%;
+}
+.card2{
+  background: linear-gradient(to bottom, #66ff66 0%, #009900 100%);
+  text-align:center;
+  width:300px;
+  border-radius: 2%;
+}
+.card3{
+  background: linear-gradient(to bottom, #cc9900 0%, #ff9900 100%);
+  text-align:center;
+  width:300px;
+  border-radius: 2%;
+}
