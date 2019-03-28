@@ -118,7 +118,11 @@ const unlockedCourse = data.filter((course) =>(
 // ))
 
  class StudentHomePage extends Component {
+ 
   render() {
+    console.log('course detials ', this.props.course)
+    console.log('auth detials ', this.props.auth)
+    console.log('props', this.props)
     return (
       <Wrapper>
         <h1>Welcome {this.props.auth.name.givenName},</h1>
@@ -187,8 +191,10 @@ const unlockedCourse = data.filter((course) =>(
   }
 }
 
-const mapStateToProps =({auth}) =>(
-  {auth}
-)
+const mapStateToProps = state =>({
+  auth: state.auth,
+  course: state.course,
+})
+
 
 export default withRouter(connect(mapStateToProps)(StudentHomePage))

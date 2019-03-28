@@ -2,18 +2,16 @@ const mongoose = require('mongoose')
 const {Schema} = mongoose
 
 const CourseSchema = new Schema({
-  title: String,
-  teacherName: string,
-  totalVideos:Number,
+  courseTitle: String,
+  teacherName: String,
+  coursePrice: Number,
+  totalVideos: Number,
   totalDuration: Number,
-  price:Number,
-  level:Array,
+  courseLevel: Array,
+  description:String,
   feature1:String,
   feature2:String,
-  feature3:String,
-  feature4:String,
-  feature5:String,
-  description:String,
+  thumbnail:String,
 })
 
-mongoose.model('users', CourseSchema)
+module.exports = mongoose.model('courses', CourseSchema)

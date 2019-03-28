@@ -1,3 +1,9 @@
 export const FETCH_USER = 'fetch_user'
 export const DEDUCT_CREDIT = 'deduct_credit'
 export const ADD_COURSE = 'add_course'
+export const ADD_COURSE_SUCCESS = 'add_course_success'
+export const ADD_COURSE_ERROR = 'add_course_error'
+export const UPLOAD_IMAGE = "upload_image"
+export const UPLOAD_IMAGE_SUCCESS = "upload_image_success"
+export const UPLOAD_IMAGE_ERROR = "upload_image_error"
+export const FETCH_COURSE = 'fetch_course'
