@@ -8,11 +8,11 @@ import {
   Icon,
   Divider,
   Modal,
+  Upload,
   Select,
   Button,
   notification
 } from "antd";
-import Upload from '../Upload'
 import { Wrapper } from "../Wrapper";
 import { addCourse, uploadImage } from "../../actions";
 import { connect } from "react-redux";
@@ -45,21 +45,13 @@ class AddCourseForm extends Component {
     super(props);
 
     this.state = {
-      loading: false
+      loading: false,
+      selectedFile: ""
     };
 
     this.handleChange = this.handleChange.bind(this);
+    
   }
-
-  // normFile = (e) => {
-   
-  //   console.log('Upload event:', e);
-  //   if (Array.isArray(e)) {
-  //      this.props.uploadImage(e.file)
-  //   }
-  //   return e && e.fileList;
-     
-  // }
 
   handleChange(e) {
     this.setState({ courseName: e.target.value });
@@ -68,7 +60,7 @@ class AddCourseForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      console.log('form values', values)
+      console.log("values", values);
       if (!err) {
         if (this.props.course.loading) {
           this.setState({
@@ -80,8 +72,7 @@ class AddCourseForm extends Component {
           openNotificationError("error");
         } else {
           this.props.addCourse(values);
-        
-         
+
           openNotificationSuccess("success");
         }
       }
@@ -95,7 +86,7 @@ class AddCourseForm extends Component {
       wrapperCol: { span: 14 }
     };
 
-    console.log('course', this.props.course)
+    console.log("course", this.props.course);
 
     return (
       <Wrapper
@@ -149,7 +140,7 @@ class AddCourseForm extends Component {
             </Form.Item>
             <Form.Item label="Total Duration">
               {getFieldDecorator("totalDuration", {
-                initialValue:1,
+                initialValue: 1,
                 rules: [
                   { required: true, message: "Total Duration is required!" }
                 ]
@@ -158,7 +149,13 @@ class AddCourseForm extends Component {
             </Form.Item>
             <Form.Item label="Course Level">
               {getFieldDecorator("courseLevel", {
-                rules: [{ required: true, message: "Level is required!", type:'array' }]
+                rules: [
+                  {
+                    required: true,
+                    message: "Level is required!",
+                    type: "array"
+                  }
+                ]
               })(
                 <Select
                   mode="multiple"
@@ -191,14 +188,22 @@ class AddCourseForm extends Component {
               <Input placeholder="Feature 4" allowClear />
               <Input placeholder="Feature 5" allowClear />
             </Form.Item>
-            <Form.Item label="Upload a Thumbnail">
-              {getFieldDecorator("thumbnail", {
-                valuePropName: "thumbnail",
-               
+            <Form.Item label="Upload">
+              {getFieldDecorator("image", {
+                valuePropName: "fileList",
+                getValueFromEvent: this.handleFileChange
               })(
-                <input type="file" name="thumbnail" id="thumbnail" />
+                <Form.Item label="Upload a Thumbnail">
+                {getFieldDecorator("thumbnail", {
+                  valuePropName: "thumbnail",
+                 
+                })(
+                  <input type="file" name="thumbnail" id="thumbnail" />
+                )}
+              </Form.Item>
               )}
             </Form.Item>
+
             <Divider />
             <Button
               style={{ right: 0, float: "right", marginTop: 10 }}

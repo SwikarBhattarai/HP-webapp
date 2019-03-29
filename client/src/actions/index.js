@@ -44,7 +44,7 @@ export const uploadImage = (image) => async dispatch =>{
   console.log('image details is', image)
   try{
     dispatch({type:UPLOAD_IMAGE})
-    const res = await axios.post(`/api/upload`, {image})
+    const res = await axios.post('/api/upload', {image})
     dispatch({type:UPLOAD_IMAGE_SUCCESS, payload:res.data})
   }catch(error){
     dispatch({type:UPLOAD_IMAGE_ERROR, payload:error})

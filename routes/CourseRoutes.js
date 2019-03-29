@@ -17,9 +17,9 @@ module.exports = app => {
     var newCourse = await new Course(req.body.course).save()
     console.log('backend course', req.body.course)
     res.send(newCourse)
-    // console.log('coursee', req.body.course.thumbnail)
-    // const result = await cloudinary.v2.uploader.upload(req.body.course.thumbnail)
-    // res.send(result)
+    console.log('coursee', req.body.course.thumbnail)
+    const result = await cloudinary.v2.uploader.upload(req.body.course.thumbnail)
+    res.send(result)
   })
 
   app.get('/api/fetch_course', async(req,res) =>{
