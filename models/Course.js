@@ -12,7 +12,11 @@ const CourseSchema = new Schema({
   description: String,
   feature: Array,
   thumbnail: String,
-  videos:Array,
+  videos:{
+    title: String,
+    description: String,
+    url: String,
+  },
 });
 
 module.exports = mongoose.model("courses", CourseSchema);

@@ -226,7 +226,7 @@ class AddCourseForm extends Component {
               htmlType="submit"
          
             >
-              {this.props.course.loading ? <Icon type="loading" /> : openNotificationSuccess('success')}
+              {this.props.course.loading ? <Icon type="loading" /> : ''}
               Submit Course
             </Button>
           </Form>
