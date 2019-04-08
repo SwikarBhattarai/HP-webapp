@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const keys = require('./config/keys')
 require('./models/User')
 require('./services/passport')
+const morgan = require('morgan')
 
 const app = express()
 
@@ -23,6 +24,10 @@ app.use(
 
 app.use(passport.initialize())
 app.use(passport.session())
+
+app.use(morgan('dev'))
+
+app.use(express.static(__dirname + '/public'));
 
 
 require('./routes/authRoutes')(app)

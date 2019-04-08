@@ -11,4 +11,4 @@ const userSchema = new Schema({
   credits: {type:Number, default:0}
 })
 
-module.exports = mongoose.model('users', userSchema)
+module.exports = mongoose.model("users", userSchema)

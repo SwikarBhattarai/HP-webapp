@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Icon, Avatar, Modal, Button, Spin, notification } from 'antd';
-import { deductCredit,fetchUser } from '../../actions';
+import { deductCredit, unlockCourse, fetchUser } from '../../actions';
 import { connect } from 'react-redux';
 import './style.css';
 
@@ -37,10 +37,11 @@ class CourseCard extends Component {
     this.props.fetchUser()
     const amount = this.props.auth.credits;
     const diffAmount = amount - this.props.price;
-
+    const status = "unlocked"
     console.log('amount', amount);
     console.log('price', this.props.price);
     this.props.deductCredit(diffAmount);
+    this.props.unlockCourse(status)
     this.setState({
       amount: this.props.auth.credits - this.props.price,
       visible: false,
@@ -49,10 +50,6 @@ class CourseCard extends Component {
     openNotification('success')
   
      
-      
-     
-   
-    
   };
 
   handleCancel = e => {
@@ -63,6 +60,8 @@ class CourseCard extends Component {
 
   render() {
     const { Meta } = Card;
+
+    console.log('thumbnail', '../../../../' + this.props.thumbnail)
     return (
       <div>
         <Card
@@ -73,7 +72,7 @@ class CourseCard extends Component {
           cover={
             <img
               alt="example"
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+              src={this.props.thumbnail}
             />
           }
           actions={
@@ -149,6 +148,7 @@ function mapStateToProps({ auth }) {
 const mapDispatchToProps = dispatch => ({
   deductCredit: amount => dispatch(deductCredit(amount)),
   fetchUser: () => dispatch(fetchUser()),
+  unlockCourse:status => dispatch(unlockCourse(status))
 });
 export default withRouter(
   connect(
