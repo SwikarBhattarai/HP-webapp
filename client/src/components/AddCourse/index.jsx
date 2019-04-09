@@ -15,10 +15,13 @@ import {
 import { Wrapper } from "../Wrapper";
 import { addCourse, uploadImage, uploadVideos } from "../../actions";
 import { connect } from "react-redux";
+import FormItem from "antd/lib/form/FormItem";
 
 const { Option } = Select;
 const { TextArea } = Input;
 const children = [];
+
+let id = 0;
 
 children.push(<Option key="All Level">All Level</Option>);
 children.push(<Option key="Beginner">Beginner</Option>);
@@ -32,7 +35,6 @@ const openNotificationSuccess = type => {
   });
 };
 
-
 class AddCourseForm extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +46,6 @@ class AddCourseForm extends Component {
 
     this.handleChange = this.handleChange.bind(this);
   }
-
 
   handleChange(e) {
     this.setState({ courseName: e.target.value });
@@ -71,19 +72,141 @@ class AddCourseForm extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.addCourse(values);
+        console.log('values', values)
         console.log("course", this.props.course.course);
       }
     });
   };
 
+  remove = k => {
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue("keys");
+    // We need at least one passenger
+    if (keys.length === 1) {
+      return;
+    }
+
+    // can use data-binding to set
+    form.setFieldsValue({
+      keys: keys.filter(key => key !== k)
+    });
+  };
+
+  add = () => {
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue("keys");
+    const nextKeys = keys.concat(id++);
+    // can use data-binding to set
+    // important! notify form to detect changes
+    form.setFieldsValue({
+      keys: nextKeys
+    });
+  };
+
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 14 }
-    };
+    const { getFieldDecorator, getFieldValue } = this.props.form;
 
     console.log("course", this.props.course);
+
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 4 }
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 20 }
+      }
+    };
+    const formItemLayoutWithOutLabel = {
+      wrapperCol: {
+        xs: { span: 24, offset: 0 },
+        sm: { span: 20, offset: 4 }
+      }
+    };
+    getFieldDecorator("keys", { initialValue: [] });
+    const keys = getFieldValue("keys");
+    const formItems = keys.map((k, index) => (
+      <div>
+        <Form.Item
+          {...formItemLayout}
+          label="Video Details"
+          required={false}
+          key={k}
+        >
+          {getFieldDecorator(`videoTitle[${k}]`, {
+            validateTrigger: ["onChange", "onBlur"],
+            rules: [
+              {
+                required: true,
+                whitespace: true,
+                message: "Please input passenger's name or delete this field."
+              }
+            ]
+          })(
+            <Input
+              name="videoTitle"
+              placeholder="Video Title"
+              style={{ width: "60%", marginRight: 8 }}
+            />
+          )}
+
+          {keys.length > 1 ? (
+            <Icon
+              className="dynamic-delete-button"
+              type="minus-circle-o"
+              onClick={() => this.remove(k)}
+            />
+          ) : null}
+
+          {getFieldDecorator(`videoDescription[${k}]`, {
+            validateTrigger: ["onChange", "onBlur"],
+            rules: [
+              {
+                required: true,
+                whitespace: true,
+                message: "Please input passenger's name or delete this field."
+              }
+            ]
+          })(
+            <Input
+              name="videoDescription"
+              placeholder="Video Description"
+              style={{ width: "60%", marginRight: 8 }}
+            />
+          )}
+
+          {keys.length > 1 ? (
+            <Icon
+              className="dynamic-delete-button"
+              type="minus-circle-o"
+              onClick={() => this.remove(k)}
+            />
+          ) : null}
+          {getFieldDecorator(`videoFile[${k}]`, {
+            valuePropName: "fileList",
+            getValueFromEvent: this.normVideos,
+
+          })(
+            <Upload name="fileList" action="/api/uploadVideos" listType="picture">
+            <Button>
+              <Icon type="upload" /> Click to upload
+            </Button>
+          </Upload>
+          )}
+
+          {keys.length > 1 ? (
+            <Icon
+              className="dynamic-delete-button"
+              type="minus-circle-o"
+              onClick={() => this.remove(k)}
+            />
+          ) : null}
+        </Form.Item>
+      </div>
+    ));
 
     return (
       <Wrapper
@@ -198,35 +321,24 @@ class AddCourseForm extends Component {
               )}
             </Form.Item>
 
-            <Form.Item label="Upload Videos">
-              <div className="videos">
-                {getFieldDecorator("videos", {
-                  valuePropName: "fileList",
-                  getValueFromEvent: this.normVideos
-                })(
-                  <Upload.Dragger name="fileList" action="/api/uploadVideos">
-                    <p className="ant-upload-drag-icon">
-                      <Icon type="inbox" />
-                    </p>
-                    <p className="ant-upload-text">
-                      Click or drag file to this area to upload
-                    </p>
-                    <p className="ant-upload-hint">
-                      Support for a single or bulk upload.
-                    </p>
-                  </Upload.Dragger>
-                )}
-              </div>
+            <FormItem label="Videos">
+              {formItems}
+            </FormItem>
+
+            <Form.Item {...formItemLayoutWithOutLabel}>
+              <Button type="dashed" onClick={this.add} style={{ width: "60%" }}>
+                <Icon type="plus" /> Add Videos
+              </Button>
             </Form.Item>
+
             <Divider />
             <Button
               style={{ right: 0, float: "right", marginTop: 10 }}
               type="primary"
               size="large"
               htmlType="submit"
-         
             >
-              {this.props.course.loading ? <Icon type="loading" /> : ''}
+              {this.props.course.loading ? <Icon type="loading" /> : ""}
               Submit Course
             </Button>
           </Form>
