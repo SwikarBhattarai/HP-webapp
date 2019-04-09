@@ -13,9 +13,8 @@ import {
   notification
 } from "antd";
 import { Wrapper } from "../Wrapper";
-import { addCourse, uploadImage, uploadVideos } from "../../actions";
+import { addCourse } from "../../actions";
 import { connect } from "react-redux";
-import FormItem from "antd/lib/form/FormItem";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -40,8 +39,13 @@ class AddCourseForm extends Component {
     super(props);
 
     this.state = {
+      courseId: 0,
       selectedFile: "",
-      selectedVideos: []
+      selectedVideos: [],
+      title: "",
+      description: "",
+      file: "",
+      videos: [{ title: "", description: "", file: "" }]
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -71,8 +75,22 @@ class AddCourseForm extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.addCourse(values);
-        console.log('values', values)
+        console.log("values", values);
+        console.log("videos", this.state.videos);
+
+        const data = {
+          courseId: this.state.courseId,
+          courseDetails: values,
+          videos: this.state.videos
+        };
+
+        console.log("values", data);
+
+        this.props.addCourse(data);
+        this.setState({
+          courseId: this.state.courseId + 1
+        });
+
         console.log("course", this.props.course.course);
       }
     });
@@ -103,9 +121,49 @@ class AddCourseForm extends Component {
     form.setFieldsValue({
       keys: nextKeys
     });
+    this.setState({
+      videos: this.state.videos.concat([
+        { title: "", description: "", file: "" }
+      ])
+    });
+  };
+
+  handleVideoTitleChange = k => evt => {
+    console.log('title', evt.target.value)
+    const newVideo = this.state.videos.map((video, i) => {
+      if (k !== i) return video;
+      return { ...video, title: evt.target.value };
+    });
+
+    this.setState({ videos: newVideo });
+  };
+
+  handleDescriptionChange = k => evt => {
+    console.log("description", evt.target.value);
+    const newVideo = this.state.videos.map((video, i) => {
+      if (k !== i) return video;
+      return { ...video, description: evt.target.value };
+    });
+
+    this.setState({ videos: newVideo });
+  };
+
+  handleFileChange = k => evt => {
+    const newVideo = this.state.videos.map((video, i) => {
+      if (k !== i) return video;
+      if (evt.file.status === "done") {
+        console.log('upload', evt.file.response.url)
+        return { ...video, file: evt.file.response.url };
+       
+      }
+    });
+    this.setState({ videos: newVideo });
+
+    
   };
 
   render() {
+    console.log("props", this.props);
     const { getFieldDecorator, getFieldValue } = this.props.form;
 
     console.log("course", this.props.course);
@@ -128,84 +186,63 @@ class AddCourseForm extends Component {
     };
     getFieldDecorator("keys", { initialValue: [] });
     const keys = getFieldValue("keys");
-    const formItems = keys.map((k, index) => (
-      <div>
-        <Form.Item
-          {...formItemLayout}
-          label="Video Details"
-          required={false}
-          key={k}
+    const formItems = this.state.videos.map((video, k) => (
+      <Form.Item
+        {...formItemLayout}
+        label="Video Details"
+        required={false}
+      >
+        <Input
+         
+          name="videoTitle"
+          placeholder="Video Title"
+          onChange={this.handleVideoTitleChange(k)}
+          style={{ width: "60%", marginRight: 8 }}
+        />
+
+        {keys.length > 1 ? (
+          <Icon
+            className="dynamic-delete-button"
+            type="minus-circle-o"
+            onClick={() => this.remove(k)}
+          />
+        ) : null}
+
+        <Input
+       
+          name="videoDescription"
+          placeholder="Video Description"
+          style={{ width: "60%", marginRight: 8 }}
+          onChange={this.handleDescriptionChange(k)}
+        />
+
+        {keys.length > 1 ? (
+          <Icon
+            className="dynamic-delete-button"
+            type="minus-circle-o"
+            onClick={() => this.remove(k)}
+          />
+        ) : null}
+
+        <Upload
+          name="fileList"
+          onChange={this.handleFileChange(k)}
+          action="/api/uploadVideos"
+          listType="picture"
         >
-          {getFieldDecorator(`videoTitle[${k}]`, {
-            validateTrigger: ["onChange", "onBlur"],
-            rules: [
-              {
-                required: true,
-                whitespace: true,
-                message: "Please input passenger's name or delete this field."
-              }
-            ]
-          })(
-            <Input
-              name="videoTitle"
-              placeholder="Video Title"
-              style={{ width: "60%", marginRight: 8 }}
-            />
-          )}
+          <Button>
+            <Icon type="upload" /> Click to upload
+          </Button>
+        </Upload>
 
-          {keys.length > 1 ? (
-            <Icon
-              className="dynamic-delete-button"
-              type="minus-circle-o"
-              onClick={() => this.remove(k)}
-            />
-          ) : null}
-
-          {getFieldDecorator(`videoDescription[${k}]`, {
-            validateTrigger: ["onChange", "onBlur"],
-            rules: [
-              {
-                required: true,
-                whitespace: true,
-                message: "Please input passenger's name or delete this field."
-              }
-            ]
-          })(
-            <Input
-              name="videoDescription"
-              placeholder="Video Description"
-              style={{ width: "60%", marginRight: 8 }}
-            />
-          )}
-
-          {keys.length > 1 ? (
-            <Icon
-              className="dynamic-delete-button"
-              type="minus-circle-o"
-              onClick={() => this.remove(k)}
-            />
-          ) : null}
-          {getFieldDecorator(`videoFile[${k}]`, {
-            valuePropName: "fileList",
-            getValueFromEvent: this.normVideos,
-
-          })(
-            <Upload name="fileList" action="/api/uploadVideos" listType="picture">
-            <Button>
-              <Icon type="upload" /> Click to upload
-            </Button>
-          </Upload>
-          )}
-
-          {keys.length > 1 ? (
-            <Icon
-              className="dynamic-delete-button"
-              type="minus-circle-o"
-              onClick={() => this.remove(k)}
-            />
-          ) : null}
-        </Form.Item>
-      </div>
+        {keys.length > 1 ? (
+          <Icon
+            className="dynamic-delete-button"
+            type="minus-circle-o"
+            onClick={() => this.remove(k)}
+          />
+        ) : null}
+      </Form.Item>
     ));
 
     return (
@@ -320,11 +357,7 @@ class AddCourseForm extends Component {
                 </Upload>
               )}
             </Form.Item>
-
-            <FormItem label="Videos">
-              {formItems}
-            </FormItem>
-
+            {formItems}
             <Form.Item {...formItemLayoutWithOutLabel}>
               <Button type="dashed" onClick={this.add} style={{ width: "60%" }}>
                 <Icon type="plus" /> Add Videos

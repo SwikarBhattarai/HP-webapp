@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const CourseSchema = new Schema({
+  courseId: Number,
   courseTitle: String,
   teacherName: String,
   coursePrice: Number,
@@ -14,9 +15,9 @@ const CourseSchema = new Schema({
   thumbnail: String,
   videos:[
     {
-      title: String,
-      description: String,
-      url: String,
+     title:String,
+     description:String,
+     file:String,
     }
   ]
 });
