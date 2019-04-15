@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
 import "./style.css";
-import { Spin } from 'antd'
+import { Spin } from "antd";
 import { fetchCourse } from "../../actions";
 import CourseCard from "../CourseCard";
 
@@ -113,7 +113,7 @@ import CourseCard from "../CourseCard";
 // ))
 
 class StudentHomePage extends Component {
-  componentDidMount() {
+  componentWillMount() {
     this.props.fetchCourse();
   }
 
@@ -182,12 +182,13 @@ class StudentHomePage extends Component {
                         title={item.courseTitle}
                         teacherName={item.teacherName}
                         price={item.coursePrice}
-                        // level ={this.props.courseLevel}
+                        level={item.courseLevel}
                         status={item.status}
-                        videosCount={item.videosCount}
+                        totalVideos={item.totalVideos}
                         totalDuration={item.totalDuration}
                         description={item.description}
                         thumbnail={item.thumbnail}
+                        id={item._id}
                       />
                     </List.Item>
                   )}
@@ -236,9 +237,7 @@ const mapDispatchToProps = dispatch => ({
   fetchCourse: () => dispatch(fetchCourse())
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(StudentHomePage)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StudentHomePage);

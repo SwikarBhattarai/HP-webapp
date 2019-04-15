@@ -1,6 +1,6 @@
-import { ADD_COURSE, ADD_COURSE_ERROR, ADD_COURSE_SUCCESS, FETCH_COURSE, UPLOAD_IMAGE, UPLOAD_IMAGE_SUCCESS, UPLOAD_IMAGE_ERROR, UPLOAD_VIDEOS, UPLOAD_VIDEOS_SUCCESS, UPLOAD_VIDEOS_ERROR } from '../actions/types'
+import { ADD_COURSE, ADD_COURSE_ERROR, ADD_COURSE_SUCCESS, FETCH_COURSE, UPLOAD_IMAGE, UPLOAD_IMAGE_SUCCESS, UPLOAD_IMAGE_ERROR, UPLOAD_VIDEOS, UPLOAD_VIDEOS_SUCCESS, UPLOAD_VIDEOS_ERROR, FETCH_SINGLE_COURSE } from '../actions/types'
 
-export default function(state = {loading:false, course:false, videos:false,image:false, error:false}, action) {
+export default function(state = {loading:false, course:false, videos:false,image:false, error:false, singleCourse: false}, action) {
   
   switch(action.type){
     case ADD_COURSE:
@@ -73,6 +73,12 @@ export default function(state = {loading:false, course:false, videos:false,image
           loading:false,
           videos:false,
           error:action.payload
+        }
+      case FETCH_SINGLE_COURSE:
+        return {
+          singleCourse: action.payload,
+          loading:false,
+          error: false,
         }
     default:
       return state;

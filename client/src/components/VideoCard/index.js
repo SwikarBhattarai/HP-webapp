@@ -1,48 +1,63 @@
-import React from 'react';
-import videojs from 'video.js';
-import 'video.js/dist/video-js.css';
-
-// video.js player from the docs: https://github.com/videojs/video.js/blob/master/docs/guides/react.md
-
-class VideoPlayer extends React.Component {
-  componentDidMount() {
-    // instantiate Video.js
-    this.player = videojs(this.videoNode, this.props, function onPlayerReady() {
-      console.log('onPlayerReady', this)
-    });
-  }
-
-  // destroy player on unmount
-  componentWillUnmount() {
-    if (this.player) {
-      this.player.dispose();
+import React, { Component } from 'react';
+import VideoPlayer from 'react-video-js-player';
+ 
+class VideoCard extends Component {
+    player = {}
+    state = {
+        video: {
+            src: "http://techslides.com/demos/sample-videos/small.mp4",
+            poster: "http://www.example.com/path/to/video_poster.jpg"
+        }
     }
-  }
-
-  componentWillReceiveProps(newProps) {
-    // When a user moves from one title to the next, the VideoPlayer component will not be unmounted,
-    // instead its properties will be updated with the details of the new video. In this case,
-    // we can update the src of the existing player with the new video URL.
-    if (this.player) {
-      this.player.src({
-        type: newProps.video.mime_type,
-        src: newProps.video.video_url
-      });
-    } 
-  }
-
-  // wrap the player in a div with a `data-vjs-player` attribute
-  // so videojs won't create additional wrapper in the DOM
-  // see https://github.com/videojs/video.js/pull/3856
-  
-  // use `ref` to give Video JS a reference to the video DOM element: https://reactjs.org/docs/refs-and-the-dom
-  render() {
-    return (
-      <div data-vjs-player style={{height:500}}>
-        <video ref={ node => this.videoNode = node } className="video-js"></video>
-      </div>
-    )
-  }
+ 
+    onPlayerReady(player){
+        console.log("Player is ready: ", player);
+        this.player = player;
+    }
+ 
+    onVideoPlay(duration){
+        console.log("Video played at: ", duration);
+    }
+ 
+    onVideoPause(duration){
+        console.log("Video paused at: ", duration);
+    }
+ 
+    onVideoTimeUpdate(duration){
+        console.log("Time updated: ", duration);
+    }
+ 
+    onVideoSeeking(duration){
+        console.log("Video seeking: ", duration);
+    }
+ 
+    onVideoSeeked(from, to){
+        console.log(`Video seeked from ${from} to ${to}`);
+    }
+ 
+    onVideoEnd(){
+        console.log("Video ended");
+    }
+ 
+    render() {
+        return (
+            <div>
+                <VideoPlayer
+                    controls={true}
+                    src={this.state.video.src}
+                    poster={this.state.video.poster}
+                    width="800"
+                    height="420"
+                    onReady={this.onPlayerReady.bind(this)}
+                    onPlay={this.onVideoPlay.bind(this)}
+                    onPause={this.onVideoPause.bind(this)}
+                    onTimeUpdate={this.onVideoTimeUpdate.bind(this)}
+                    onSeeking={this.onVideoSeeking.bind(this)}
+                    onSeeked={this.onVideoSeeked.bind(this)}
+                    onEnd={this.onVideoEnd.bind(this)}
+                />
+            </div>
+        );
+    }
 }
-
-export default VideoPlayer;
+export default VideoCard;

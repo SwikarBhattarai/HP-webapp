@@ -54,7 +54,7 @@ class App extends Component {
         return(
           [
             <Route exact key="home" path="/home" component={StudentHomePage} />,
-            <Route exact key="video" path="/courseId" component={StudentCourseVideoPage} />
+            <Route exact key="video" path="/course/:courseId" component={StudentCourseVideoPage} />
           ]
           
         )

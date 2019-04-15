@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import { Card, Icon, Avatar, Modal, Button, Spin, notification } from 'antd';
 import { deductCredit, unlockCourse, fetchUser } from '../../actions';
 import { connect } from 'react-redux';
+
 import './style.css';
 
 const openNotification = type => {
@@ -14,24 +15,33 @@ const openNotification = type => {
 };
 
 class CourseCard extends Component {
-  state = { visible: false, amount: 0 };
+  state = { visible: false, amount: 0, redirect:false };
 
   showModal = e => {
-    if (this.props.status === 'unlocked') {
+    if (this.props.status === 'locked') {
       this.setState({
         visible: false,
+        redirect: true,
       });
+
 
       console.log('History', this.props.history);
 
-      let path = '/courseId';
-      this.props.history.push(path);
+      
+      // console.log('path', path)
+      // this.props.history.push(`/course/${path}`);
     } else {
       this.setState({
         visible: true,
       });
     }
   };
+  renderRedirect = () => {
+    let path = this.props.id;
+    if (this.state.redirect) {
+      return <Redirect to={`/course/${path}`} />
+    }
+  }
 
   handleUnlock = e => {
     this.props.fetchUser()
@@ -61,9 +71,10 @@ class CourseCard extends Component {
   render() {
     const { Meta } = Card;
 
-    console.log('thumbnail', '../../../../' + this.props.thumbnail)
+    console.log('thumbnail', this.props.thumbnail)
     return (
       <div>
+       {this.renderRedirect()}
         <Card
           bordered
           size='default'
@@ -103,7 +114,7 @@ class CourseCard extends Component {
             <h2>{this.props.title}</h2>,
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
               <p>
-                <Icon type="play-circle" /> {this.props.videosCount} videos
+                <Icon type="play-circle" /> {this.props.totalVideos} videos
               </p>
               <p>
                 <Icon type="clock-circle" /> {this.props.totalDuration} hours

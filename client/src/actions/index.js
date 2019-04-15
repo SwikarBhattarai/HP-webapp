@@ -14,7 +14,8 @@ import {
   FETCH_COURSE, 
   UNLOCK_COURSE,
   UNLOCK_COURSE_SUCCESS,
-  UNLOCK_COURSE_ERROR
+  UNLOCK_COURSE_ERROR,
+  FETCH_SINGLE_COURSE
 } from './types'
 
  export const fetchUser = () => async dispatch => {
@@ -84,4 +85,10 @@ export const unlockCourse = (status) => async dispatch =>{
 export const fetchCourse =() => async dispatch =>{
   const res = await axios.get('/api/fetch_course')
   dispatch({type:FETCH_COURSE, payload:res.data})
+}
+
+export const fetchSingleCourse =(courseId) => async dispatch =>{
+  console.log('courseId', courseId)
+  const res = await axios.post(`/api/course/${courseId}`)
+  dispatch({type:FETCH_SINGLE_COURSE, payload:res.data})
 }

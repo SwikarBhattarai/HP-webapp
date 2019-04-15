@@ -10,11 +10,14 @@ import {
   Button,
   Upload,
   Icon,
-  notification
+  notification,
+  message
 } from "antd";
 import { Wrapper } from "../Wrapper";
 import { addCourse } from "../../actions";
 import { connect } from "react-redux";
+import { rejects } from "assert";
+import { promises } from "fs";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -26,13 +29,6 @@ children.push(<Option key="All Level">All Level</Option>);
 children.push(<Option key="Beginner">Beginner</Option>);
 children.push(<Option key="Intermediate">Intermediate</Option>);
 children.push(<Option key="Advanced">Advanced</Option>);
-
-const openNotificationSuccess = type => {
-  notification[type]({
-    message: "Course Added!",
-    description: "The students can now view the course :)"
-  });
-};
 
 class AddCourseForm extends Component {
   constructor(props) {
@@ -59,16 +55,6 @@ class AddCourseForm extends Component {
     console.log("Upload event:", e);
 
     return e.file.thumbUrl;
-  };
-
-  normVideos = e => {
-    console.log("Upload event:", e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    console.log("e", e);
-    console.log("fileList", e.fileList);
-    return e && e.fileList;
   };
 
   handleSubmit = e => {
@@ -112,53 +98,59 @@ class AddCourseForm extends Component {
   };
 
   add = () => {
-    const { form } = this.props;
-    // can use data-binding to get
-    const keys = form.getFieldValue("keys");
-    const nextKeys = keys.concat(id++);
-    // can use data-binding to set
-    // important! notify form to detect changes
-    form.setFieldsValue({
-      keys: nextKeys
-    });
     this.setState({
       videos: this.state.videos.concat([
-        { title: "", description: "", file: "" }
+        {
+          title: "",
+          description: "",
+          file: ""
+        }
       ])
     });
+    console.log("state", this.state.videos);
   };
 
-  handleVideoTitleChange = k => evt => {
-    console.log('title', evt.target.value)
-    const newVideo = this.state.videos.map((video, i) => {
-      if (k !== i) return video;
+  handleVideoTitleChange = i => evt => {
+    console.log("title", evt.target.value);
+    const newVideo = this.state.videos.map((video, k) => {
+      if (i !== k) return video;
       return { ...video, title: evt.target.value };
     });
 
     this.setState({ videos: newVideo });
   };
 
-  handleDescriptionChange = k => evt => {
+  handleDescriptionChange = i => evt => {
     console.log("description", evt.target.value);
-    const newVideo = this.state.videos.map((video, i) => {
-      if (k !== i) return video;
+    const newVideo = this.state.videos.map((video, k) => {
+      if (i !== k) return video;
       return { ...video, description: evt.target.value };
     });
 
     this.setState({ videos: newVideo });
   };
 
-  handleFileChange = k => evt => {
-    const newVideo = this.state.videos.map((video, i) => {
-      if (k !== i) return video;
-      if (evt.file.status === "done") {
-        console.log('upload', evt.file.response.url)
-        return { ...video, file: evt.file.response.url };
-       
-      }
-    });
-    this.setState({ videos: newVideo });
+   handleFileChange = i => evt => {
+     
+     if(evt.file.status ==="done"){
+      const response =  evt.file.response.url
+      const newVideo  = this.state.videos.map( (video, k)=>{
+        if (i !== k) return video;
+        return  {...video, file:response}
+   
+      })
+      this.setState({
+        videos: newVideo
+      })
+     }
 
+   
+   
+   
+
+    console.log('videos', this.state.videos)
+    
+   
     
   };
 
@@ -184,49 +176,26 @@ class AddCourseForm extends Component {
         sm: { span: 20, offset: 4 }
       }
     };
-    getFieldDecorator("keys", { initialValue: [] });
-    const keys = getFieldValue("keys");
-    const formItems = this.state.videos.map((video, k) => (
-      <Form.Item
-        {...formItemLayout}
-        label="Video Details"
-        required={false}
-      >
+
+    const formItems = this.state.videos.map((video, i) => (
+      <Form.Item {...formItemLayout} label="Video Details" required={false}>
         <Input
-         
           name="videoTitle"
           placeholder="Video Title"
-          onChange={this.handleVideoTitleChange(k)}
+          onChange={this.handleVideoTitleChange(i)}
           style={{ width: "60%", marginRight: 8 }}
         />
 
-        {keys.length > 1 ? (
-          <Icon
-            className="dynamic-delete-button"
-            type="minus-circle-o"
-            onClick={() => this.remove(k)}
-          />
-        ) : null}
-
         <Input
-       
           name="videoDescription"
           placeholder="Video Description"
           style={{ width: "60%", marginRight: 8 }}
-          onChange={this.handleDescriptionChange(k)}
+          onChange={this.handleDescriptionChange(i)}
         />
-
-        {keys.length > 1 ? (
-          <Icon
-            className="dynamic-delete-button"
-            type="minus-circle-o"
-            onClick={() => this.remove(k)}
-          />
-        ) : null}
 
         <Upload
           name="fileList"
-          onChange={this.handleFileChange(k)}
+          onChange={this.handleFileChange(i)}
           action="/api/uploadVideos"
           listType="picture"
         >
@@ -234,14 +203,14 @@ class AddCourseForm extends Component {
             <Icon type="upload" /> Click to upload
           </Button>
         </Upload>
-
+        {/* 
         {keys.length > 1 ? (
           <Icon
             className="dynamic-delete-button"
             type="minus-circle-o"
             onClick={() => this.remove(k)}
           />
-        ) : null}
+        ) : null} */}
       </Form.Item>
     ));
 

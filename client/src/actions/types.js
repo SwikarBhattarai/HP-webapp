@@ -13,3 +13,4 @@ export const FETCH_COURSE = 'fetch_course'
 export const UNLOCK_COURSE = 'unlock_course'
 export const UNLOCK_COURSE_SUCCESS = 'unlock_course_success'
 export const UNLOCK_COURSE_ERROR = 'unlock_course_error'
+export const FETCH_SINGLE_COURSE = "fetch_single_course"
