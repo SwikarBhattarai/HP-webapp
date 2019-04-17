@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 import { Card, Icon, Avatar, Modal, Button, Spin, notification } from 'antd';
-import { deductCredit, unlockCourse, fetchUser } from '../../actions';
+import { deductCredit, unlockCourse, fetchUser, fetchCourse } from '../../actions';
 import { connect } from 'react-redux';
 
 import './style.css';
@@ -17,19 +17,23 @@ const openNotification = type => {
 class CourseCard extends Component {
   state = { visible: false, amount: 0, redirect:false };
 
+  componentWillUpdate(){
+    this.props.fetchCourse()
+  }
+
   showModal = e => {
-    if (this.props.status === 'locked') {
+    if (this.props.status === 'unlocked') {
       this.setState({
         visible: false,
         redirect: true,
       });
 
-
+      console.log('propssss', this.props)
       console.log('History', this.props.history);
 
-      
-      // console.log('path', path)
-      // this.props.history.push(`/course/${path}`);
+      let path = this.props.id;
+      console.log('path', path)
+      this.props.history.push(`/course/${path}`);
     } else {
       this.setState({
         visible: true,
@@ -51,7 +55,7 @@ class CourseCard extends Component {
     console.log('amount', amount);
     console.log('price', this.props.price);
     this.props.deductCredit(diffAmount);
-    this.props.unlockCourse(status)
+    this.props.unlockCourse(status, this.props.id)
     this.setState({
       amount: this.props.auth.credits - this.props.price,
       visible: false,
@@ -74,7 +78,7 @@ class CourseCard extends Component {
     console.log('thumbnail', this.props.thumbnail)
     return (
       <div>
-       {this.renderRedirect()}
+      
         <Card
           bordered
           size='default'
@@ -152,14 +156,15 @@ class CourseCard extends Component {
   }
 }
 
-function mapStateToProps({ auth }) {
-  return { auth };
+function mapStateToProps({ auth, course }) {
+  return { auth, course };
 }
 
 const mapDispatchToProps = dispatch => ({
   deductCredit: amount => dispatch(deductCredit(amount)),
   fetchUser: () => dispatch(fetchUser()),
-  unlockCourse:status => dispatch(unlockCourse(status))
+  unlockCourse:(status, id) => dispatch(unlockCourse(status, id)),
+  fetchCourse:() => dispatch(fetchCourse())
 });
 export default withRouter(
   connect(

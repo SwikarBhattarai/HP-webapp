@@ -5,14 +5,26 @@ class VideoCard extends Component {
     player = {}
     state = {
         video: {
-            src: "http://techslides.com/demos/sample-videos/small.mp4",
+            src: "",
             poster: "http://www.example.com/path/to/video_poster.jpg"
         }
     }
  
     onPlayerReady(player){
         console.log("Player is ready: ", player);
-        this.player = player;
+        if(this.props.preload){
+            this.player = player;
+            player.reload()
+            // console.log('load', player.currentSrc())
+            // this.setState({
+            //     video:{
+            //         src:player.currentSrc()
+            //     }
+            // })
+
+        }
+      
+    
     }
  
     onVideoPlay(duration){
@@ -38,13 +50,13 @@ class VideoCard extends Component {
     onVideoEnd(){
         console.log("Video ended");
     }
- 
     render() {
         return (
             <div>
                 <VideoPlayer
                     controls={true}
-                    src={this.state.video.src}
+                    src={this.props.src}
+                    load={this.props.preload}
                     poster={this.state.video.poster}
                     width="800"
                     height="420"

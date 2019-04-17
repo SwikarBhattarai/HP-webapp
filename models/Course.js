@@ -19,7 +19,8 @@ const CourseSchema = new Schema({
      description:String,
      file:String,
     }
-  ]
+  ],
+  addedTime: { type : Date, default: Date.now }
 });
 
 module.exports = mongoose.model("courses", CourseSchema);

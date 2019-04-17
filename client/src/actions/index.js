@@ -15,7 +15,9 @@ import {
   UNLOCK_COURSE,
   UNLOCK_COURSE_SUCCESS,
   UNLOCK_COURSE_ERROR,
-  FETCH_SINGLE_COURSE
+  FETCH_SINGLE_COURSE,
+  FETCH_SINGLE_COURSE_SUCCESS,
+  FETCH_SINGLE_COURSE_ERROR
 } from './types'
 
  export const fetchUser = () => async dispatch => {
@@ -69,10 +71,10 @@ export const uploadImage = (image) => async dispatch =>{
   }
 }
 
-export const unlockCourse = (status) => async dispatch =>{
+export const unlockCourse = (status, id) => async dispatch =>{
   try{
     dispatch({type:UNLOCK_COURSE})
-    const res = await axios.post('api/unlock', {status})
+    const res = await axios.post('api/unlockcourse', {status, id})
     dispatch({
       type: UNLOCK_COURSE_SUCCESS, payload: res.data
     })
@@ -87,8 +89,14 @@ export const fetchCourse =() => async dispatch =>{
   dispatch({type:FETCH_COURSE, payload:res.data})
 }
 
-export const fetchSingleCourse =(courseId) => async dispatch =>{
-  console.log('courseId', courseId)
-  const res = await axios.post(`/api/course/${courseId}`)
-  dispatch({type:FETCH_SINGLE_COURSE, payload:res.data})
+export const fetchSingleCourse = (courseId) => async dispatch =>{
+  try{
+    dispatch({type:FETCH_SINGLE_COURSE})
+    const res = await axios.post(`/api/course/${courseId}/`)
+    dispatch({type:FETCH_SINGLE_COURSE_SUCCESS, payload:res.data})
+    console.log('res', res.data)
+
+  }catch(error){
+    dispatch({type:FETCH_SINGLE_COURSE_ERROR, payload:error})
+  }
 }

@@ -90,8 +90,8 @@ module.exports = app => {
           public_id: `thumbnail/${uniqueFilename}`,
           tags: `thumbnail`,
           format: "png",
-          width: 1200,
-          height: 1200
+          width: 800,
+          height: 800
         },
         function(err, result) {
           if (err) return res.send(err);
@@ -136,6 +136,7 @@ module.exports = app => {
       if (error) {
         console.log(error);p
       } else {
+        res.send(newCourse)
         console.log("Course saved to DB!");
       }
     });
@@ -156,9 +157,24 @@ module.exports = app => {
   app.post("/api/course/:courseId", async (req,res) => {
     console.log('courseId', req.params.courseId)
     Course.findById(req.params.courseId).exec(
-      (err, foundCourse) =>{
+      (err, course) =>{
         if(err) console.log(err)
-        else res.send({course: foundCourse})
+        else res.send(course)
+       
+      }
+    )
+    
+  })
+
+  app.post("/api/unlockcourse", async(req,res) =>{
+    console.log('status', req.body)
+    Course.findById(req.body.id).exec(
+      (err, course) =>{
+        if(err) console.log(err)
+        else
+        course.status = req.body.status
+        course.save()
+        res.send(course)
       }
     )
   })

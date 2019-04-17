@@ -128,9 +128,9 @@ class StudentHomePage extends Component {
 
     console.log("name", teacherName);
 
-    // const unlockedCourse = course.filter(
-    //   course => course.status === "unlocked"
-    // );
+    const unlockedCourse = ((course || []).filter(
+      course => course.status === "unlocked"
+    ))
 
     return (
       <Wrapper>
@@ -149,14 +149,20 @@ class StudentHomePage extends Component {
                   xl: 4,
                   xxl: 3
                 }}
-                dataSource={course}
+                dataSource={unlockedCourse}
                 renderItem={item => (
                   <List.Item>
                     <CourseCard
-                      title={item.title}
-                      teacherName={item.teacherName}
-                      price={item.price}
-                      status={item.status}
+                       title={item.courseTitle}
+                       teacherName={item.teacherName}
+                       price={item.coursePrice}
+                       level={item.courseLevel}
+                       status={item.status}
+                       totalVideos={item.totalVideos}
+                       totalDuration={item.totalDuration}
+                       description={item.description}
+                       thumbnail={item.thumbnail}
+                       id={item._id}
                     />
                   </List.Item>
                 )}
@@ -172,7 +178,7 @@ class StudentHomePage extends Component {
                     sm: 2,
                     md: 4,
                     lg: 4,
-                    xl: 6,
+                    xl: 4,
                     xxl: 3
                   }}
                   dataSource={course}
