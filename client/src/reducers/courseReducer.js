@@ -3,15 +3,16 @@ import {
   ADD_COURSE_ERROR,
   ADD_COURSE_SUCCESS,
   FETCH_COURSE,
-  UPLOAD_IMAGE,
-  UPLOAD_IMAGE_SUCCESS,
-  UPLOAD_IMAGE_ERROR,
-  UPLOAD_VIDEOS,
-  UPLOAD_VIDEOS_SUCCESS,
-  UPLOAD_VIDEOS_ERROR,
   FETCH_SINGLE_COURSE,
   FETCH_SINGLE_COURSE_SUCCESS,
-  FETCH_SINGLE_COURSE_ERROR
+  FETCH_SINGLE_COURSE_ERROR,
+  FETCH_TEACHERS,
+  EDIT_COURSE,
+  EDIT_COURSE_SUCCESS,
+  EDIT_COURSE_ERROR,
+  UPDATE_COURSE,
+  UPDATE_COURSE_SUCCESS,
+  UPDATE_COURSE_ERROR
 } from "../actions/types";
 
 export default function(
@@ -19,7 +20,10 @@ export default function(
     loading: false,
     course: false,
     image: false,
-    error: false
+    error: false,
+    singleCourse: false,
+    teachers: false,
+    updatedCourse: false,
   },
   action
 ) {
@@ -56,24 +60,73 @@ export default function(
     case FETCH_SINGLE_COURSE:
       return {
         ...state,
-        course: false,
+        singleCourse: false,
         loading: true,
         error: false
       };
     case FETCH_SINGLE_COURSE_SUCCESS:
       return {
         ...state,
-        course: action.payload,
+        singleCourse: action.payload,
         loading: false,
         error: false
       };
     case FETCH_SINGLE_COURSE_ERROR:
       return {
         ...state,
-        course: false,
+        singleCourse: false,
         loading: false,
         error: action.payload
       };
+    case FETCH_TEACHERS:
+      return {
+        ...state,
+        teachers: action.payload,
+        loading:false,
+        error:false,
+      }
+    case EDIT_COURSE:
+      return {
+        ...state,
+        course: false,
+        loading:true,
+        error: false,
+      }
+    case EDIT_COURSE_SUCCESS:
+      return{
+        ...state,
+        course: action.payload,
+        loading:false,
+        error:false,
+      }
+    case EDIT_COURSE_ERROR:
+      return{
+        ...state,
+        course:false,
+        loading:false,
+        error:true,
+      }
+    case UPDATE_COURSE: 
+      return {
+        ...state,
+        updatedCourse: false,
+        loading:true,
+        error:false,
+      }
+    case UPDATE_COURSE_SUCCESS:
+      return{
+        ...state,
+        updatedCourse:action.payload,
+        loading:false,
+        error:false,
+      }
+    case UPDATE_COURSE_ERROR:
+      return{
+        ...state,
+        updatedCourse:false,
+        loading:false,
+        error:true,
+      }
     default:
       return state;
   }

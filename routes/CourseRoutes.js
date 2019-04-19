@@ -178,4 +178,21 @@ module.exports = app => {
       }
     )
   })
+
+    app.get("/api/:id/edit", async(req,res) =>{
+    Course.findById(req.params.id, (err, foundCourse) =>{
+      res.send(foundCourse)
+    })
+  })
+
+  app.put("/api/:id", (req,res) =>{
+    res.send(req.body)
+    // Course.findByIdAndUpdate(req.params.id, req.body.course, {new:true}, function(err, updatedCourse){
+    //   if(err) res.redirect("/home")
+    //   else{
+    //     res.send({message:"Course Updated"})
+    //     res.redirect("/home")
+    //   }
+    // })
+  })
 };

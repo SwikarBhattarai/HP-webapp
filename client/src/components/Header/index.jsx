@@ -1,13 +1,13 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom'
-import {Layout, Menu, Icon, Modal, Button, Dropdown, Avatar } from 'antd';
-import './style.css';
-import Payments from '../Payments';
-import LoginPage from '../LoginPage';
-import { withRouter } from 'react-router-dom';
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
+import React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { Layout, Menu, Icon, Modal, Button, Dropdown, Avatar } from "antd";
+import "./style.css";
+import Payments from "../Payments";
+import LoginPage from "../LoginPage";
+import logo from "../../assets/logo.svg"
+import { withRouter, Redirect } from "react-router-dom";
+import SearchField from "../SearchField";
 
 const menu = (
   <Menu>
@@ -17,7 +17,7 @@ const menu = (
       </a>
     </Menu.Item>
     <Menu.Item>
-      <a rel="noopener noreferrer" href="api/logout">
+      <a rel="noopener noreferrer" href="/api/logout">
         Logout
       </a>
     </Menu.Item>
@@ -26,26 +26,26 @@ const menu = (
 
 class Header extends React.Component {
   state = {
-    current: 'logo',
-    visible: false,
+    current: "logo",
+    visible: false
   };
 
   handleClick = e => {
     this.setState({
-      current: e.key,
+      current: e.key
     });
   };
 
   showModal = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
   };
 
   handleOk = e => {
     console.log(e);
     this.setState({
-      visible: false,
+      visible: false
     });
   };
 
@@ -53,18 +53,18 @@ class Header extends React.Component {
     console.log(e);
     this.setState({
       visible: false,
-      current: 'logo',
+      current: "logo"
     });
   };
 
   renderContent() {
-    console.log('auth', this.props.auth);
+    console.log('props', this.props.auth)
     switch (this.props.auth) {
       case null:
         return;
       case false:
         return (
-          <Menu.Item key="signup" style={{ float: 'right' }}>
+          <Menu.Item key="signup" style={{ float: "right" }}>
             <a onClick={this.showModal}>Sign in / Sign up</a>
           </Menu.Item>
         );
@@ -72,34 +72,43 @@ class Header extends React.Component {
         return [
           <Menu.Item key="payments">
             {this.props.auth.isAdmin ? (
-              <Link to="/add-course"><Button ghost>Add Course</Button></Link>
+              <Link to="/add-teacher">
+                <Button ghost>Add Teacher</Button>
+              </Link>
             ) : (
               <Payments />
             )}
           </Menu.Item>,
           <Menu.Item key="credits">
             {this.props.auth.isAdmin ? (
-              <p />
+              <Link to="/add-course">
+                <Button ghost>Add Course</Button>
+              </Link>
             ) : (
               <Button
                 color="primary"
-                style={{ fontSize: 16, color: 'black', fontWeight: 'bold' }}
+                style={{ fontSize: 16, color: "black", fontWeight: "bold" }}
               >
                 {this.props.auth.credits}&nbsp;Credits
               </Button>
             )}
           </Menu.Item>,
-          <Menu.Item key="profile" style={{ float: 'right' }}>
+          <Menu.Item key="profile" style={{ float: "right" }}>
             <Dropdown overlay={menu}>
               <div>
-                <Avatar src={this.props.auth.photo[0].value} />
-                <Icon
-                  style={{ fontWeight: 'bold', color: 'white' }}
-                  type="down"
-                />
+                {this.props.auth.isAdmin || !this.props.auth.isTeacher ? (
+                  <Avatar
+                    src={this.props.auth ? this.props.auth.photo[0].value : ""}
+                  />
+                ) : (
+                  <Icon
+                    style={{ fontWeight: "bold", color: "white" }}
+                    type="down"
+                  />
+                )}
               </div>
             </Dropdown>
-          </Menu.Item>,
+          </Menu.Item>
         ];
     }
   }
@@ -111,11 +120,11 @@ class Header extends React.Component {
       <div style={{ paddingTop: 65 }}>
         <Header
           style={{
-            position: 'fixed',
-            width: '100%',
+            position: "fixed",
+            width: "100%",
             top: 0,
             zIndex: 1,
-            paddingBottom: 65,
+            paddingBottom: 65
           }}
         >
           <Menu
@@ -123,24 +132,23 @@ class Header extends React.Component {
             selectedKeys={[this.state.current]}
             mode="horizontal"
             theme="dark"
-            style={{ lineHeight: '64px' }}
+            style={{ lineHeight: "64px" }}
           >
-            <Menu.Item key="logo" style={{ fontSize: 16, color: 'white' }}>
+            <Menu.Item key="logo" style={{ fontSize: 16, color: "white" }}>
               <a
-                style={{ color: 'white' }}
-                onClick={() =>
-                  this.props.auth
-                    ? this.props.history.push('/home')
-                    : this.props.history.push('/')
+                style={{ color: "white" }}
+                href={
+                  this.props.auth ? "/home" : "/"
                 }
               >
                 <Icon type="smile" />
                 Hamro Paathsala
+               
               </a>
             </Menu.Item>
 
-            <SubMenu
-              style={{ fontSize: 16, color: 'white' }}
+            {/* <SubMenu
+              style={{ fontSize: 16, color: "white" }}
               title={
                 <span className="submenu-title-wrapper">
                   <Icon type="heart" />
@@ -156,25 +164,28 @@ class Header extends React.Component {
                 <Menu.Item key="setting:3">Beginner's Guide</Menu.Item>
                 <Menu.Item key="setting:4">Spring Framework</Menu.Item>
               </MenuItemGroup>
-            </SubMenu>
+            </SubMenu> */}
 
-            <Menu.Item style={{ fontSize: 16, color: 'white' }} key="search">
-              <Icon type="search" />
-              Search
+            <Menu.Item style={{ fontSize: 16, color: "white" }} key="search">
+              <SearchField />
             </Menu.Item>
 
             {this.renderContent()}
           </Menu>
-          <Modal
-            title="We are glad you are here."
-            visible={this.state.visible}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-            footer={null}
-            width={320}
-          >
-            <LoginPage href="auth/google" />
-          </Modal>
+          {!this.props.auth ? (
+            <Modal
+              title="We are glad you are here."
+              visible={this.state.visible}
+              onOk={this.handleOk}
+              onCancel={this.handleCancel}
+              footer={null}
+              width={320}
+            >
+              <LoginPage href="auth/google" />
+            </Modal>
+          ) : (
+            ""
+          )}
         </Header>
       </div>
     );

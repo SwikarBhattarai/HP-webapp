@@ -14,10 +14,8 @@ import {
   message
 } from "antd";
 import { Wrapper } from "../Wrapper";
-import { addCourse } from "../../actions";
+import { addCourse, fetchTeachers } from "../../actions";
 import { connect } from "react-redux";
-import { rejects } from "assert";
-import { promises } from "fs";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -45,6 +43,10 @@ class AddCourseForm extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.fetchTeachers();
   }
 
   handleChange(e) {
@@ -130,32 +132,23 @@ class AddCourseForm extends Component {
     this.setState({ videos: newVideo });
   };
 
-   handleFileChange = i => evt => {
-     
-     if(evt.file.status ==="done"){
-      const response =  evt.file.response.url
-      const newVideo  = this.state.videos.map( (video, k)=>{
+  handleFileChange = i => evt => {
+    if (evt.file.status === "done") {
+      const response = evt.file.response.url;
+      const newVideo = this.state.videos.map((video, k) => {
         if (i !== k) return video;
-        return  {...video, file:response}
-   
-      })
+        return { ...video, file: response };
+      });
       this.setState({
         videos: newVideo
-      })
-     }
+      });
+    }
 
-   
-   
-   
-
-    console.log('videos', this.state.videos)
-    
-   
-    
+    console.log("videos", this.state.videos);
   };
 
   render() {
-    console.log("props", this.props);
+    console.log("teachers", this.props.teachers);
     const { getFieldDecorator, getFieldValue } = this.props.form;
 
     console.log("course", this.props.course);
@@ -178,21 +171,19 @@ class AddCourseForm extends Component {
     };
 
     const formItems = this.state.videos.map((video, i) => (
-      <Form.Item {...formItemLayout} label="Video Details" required={false}>
+      <Form.Item {...formItemLayout} label="Video Details">
         <Input
           name="videoTitle"
           placeholder="Video Title"
           onChange={this.handleVideoTitleChange(i)}
           style={{ width: "60%", marginRight: 8 }}
         />
-
         <Input
           name="videoDescription"
           placeholder="Video Description"
           style={{ width: "60%", marginRight: 8 }}
           onChange={this.handleDescriptionChange(i)}
         />
-
         <Upload
           name="fileList"
           onChange={this.handleFileChange(i)}
@@ -203,6 +194,7 @@ class AddCourseForm extends Component {
             <Icon type="upload" /> Click to upload
           </Button>
         </Upload>
+        
         {/* 
         {keys.length > 1 ? (
           <Icon
@@ -230,21 +222,29 @@ class AddCourseForm extends Component {
             <Form.Item label="Course Title">
               {getFieldDecorator("courseTitle", {
                 rules: [
-                  // { required: true, message: "Course Title is required!" }
+                  { required: true, message: "Course Title is required!" }
                 ]
               })(<Input />)}
             </Form.Item>
-            <Form.Item label="Teacher Name">
-              {getFieldDecorator("teacherName", {
+            <Form.Item label="Teacher">
+              {getFieldDecorator("teacher", {
                 rules: [
-                  // { required: true, message: "Teacher name is required!" }
+                  { required: true, message: "Teacher name is required!" }
                 ]
-              })(<Input />)}
+              })(
+                <Select placeholder="select a teacher..." style={{ width: 200 }}>
+                  {this.props.course.teachers
+                    ? this.props.course.teachers.map(teacher => (
+                        <Option value={teacher}>{teacher.name}</Option>
+                      ))
+                    : ""}
+                </Select>
+              )}
             </Form.Item>
             <Form.Item label="Course Price">
               {getFieldDecorator("coursePrice", {
-                initialValue: 1
-                // rules: [{ required: true, message: "Price is required!" }]
+                initialValue: 1,
+                rules: [{ required: true, message: "Price is required!" }]
               })(
                 <InputNumber
                   min={1}
@@ -260,7 +260,7 @@ class AddCourseForm extends Component {
               {getFieldDecorator("totalVideos", {
                 initialValue: 1,
                 rules: [
-                  // { required: true, message: "Total Videos is required!" }
+                  { required: true, message: "Total Videos is required!" }
                 ]
               })(<InputNumber min={1} max={50} />)}
             </Form.Item>
@@ -268,20 +268,20 @@ class AddCourseForm extends Component {
               {getFieldDecorator("totalDuration", {
                 initialValue: 1,
                 rules: [
-                  // { required: true, message: "Total Duration is required!" }
+                  { required: true, message: "Total Duration is required!" }
                 ]
               })(<InputNumber min={1} max={5000} />)}
               <span> Minutes</span>
             </Form.Item>
             <Form.Item label="Course Level">
               {getFieldDecorator("courseLevel", {
-                // rules: [
-                //   {
-                //     required: true,
-                //     message: "Level is required!",
-                //     type: "string"
-                //   }
-                // ]
+                rules: [
+                  {
+                    required: true,
+                    message: "Level is required!",
+                    type: "string"
+                  }
+                ]
               })(
                 <Select
                   mode="default"
@@ -294,7 +294,7 @@ class AddCourseForm extends Component {
             </Form.Item>
             <Form.Item label="Description">
               {getFieldDecorator("description", {
-                // rules: [{ required: true, message: "Description is required!" }]
+                rules: [{ required: true, message: "Description is required!" }]
               })(
                 <TextArea
                   placeholder="Please add course description here"
@@ -304,10 +304,10 @@ class AddCourseForm extends Component {
             </Form.Item>
             <Form.Item label="Features">
               {getFieldDecorator("feature1", {
-                // rules: [{ required: true, message: "Feature 1 is required!" }]
+                rules: [{ required: true, message: "Feature 1 is required!" }]
               })(<Input placeholder="Feature 1" allowClear />)}
               {getFieldDecorator("feature2", {
-                // rules: [{ required: true, message: "Feature 2 is required!" }]
+                rules: [{ required: true, message: "Feature 2 is required!" }]
               })(<Input placeholder="Feature 2" allowClear />)}
 
               <Input placeholder="Feature 3" allowClear />
@@ -317,7 +317,8 @@ class AddCourseForm extends Component {
             <Form.Item label="Upload a Thumbnail">
               {getFieldDecorator("thumbnail", {
                 valuePropName: "file",
-                getValueFromEvent: this.normFile
+                getValueFromEvent: this.normFile,
+                rules: [{ required: true, message: "Thumbnail is required!" }]
               })(
                 <Upload name="file" action="/api/upload" listType="picture">
                   <Button>
@@ -355,7 +356,8 @@ const mapStateToProps = ({ course }) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  addCourse: fd => dispatch(addCourse(fd))
+  addCourse: fd => dispatch(addCourse(fd)),
+  fetchTeachers: () => dispatch(fetchTeachers())
 });
 
 export default withRouter(

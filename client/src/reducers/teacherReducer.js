@@ -1,33 +1,31 @@
-import { DEDUCT_CREDIT, UNLOCK_COURSE, UNLOCK_COURSE_ERROR, UNLOCK_COURSE_SUCCESS } from '../actions/types'
+import { ADD_TEACHER, ADD_TEACHER_SUCCESS, ADD_TEACHER_ERROR} from '../actions/types'
 
 export default function(state = {
-  status: false,
+  teacher: false,
   loading:false,
   error: false,
 
 }, action) {
   
   switch(action.type){
-    case DEDUCT_CREDIT:
-      return action.payload || false
-    case UNLOCK_COURSE:
+    case ADD_TEACHER:
       return {
         ...state,
         error:false,
         loading:true,
         status: false,
       }
-    case UNLOCK_COURSE_SUCCESS:
+    case ADD_TEACHER_SUCCESS:
       return {
         ...state,
-        status: action.payload,
+        teacher: action.payload,
         error:false,
         loading:false,
       }
-    case UNLOCK_COURSE_ERROR:
+    case ADD_TEACHER_ERROR:
       return {
         ...state,
-        status:false,
+        teacher:false,
         error:action.payload,
         loading:false,
       }
