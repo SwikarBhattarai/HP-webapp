@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetchUser } from "../../actions";
 import FooterNav from "../Footer";
@@ -17,6 +17,7 @@ import { Affix } from "antd";
 import AddCourse from "../AddCourse";
 import AddTeacher from "../AddTeacher";
 import EditCourse from "../EditCourse";
+import SearchPage from "../SearchPage";
 
 class App extends Component {
   componentDidMount() {
@@ -24,7 +25,7 @@ class App extends Component {
   }
 
   renderRoute() {
-    console.log('auth', this.props.auth)
+    console.log("auth", this.props.auth);
     if (this.props.auth) {
       if (this.props.auth.isAdmin) {
         return [
@@ -45,11 +46,18 @@ class App extends Component {
           //   component={StudentCourseVideoPage}
           // />,
           <Route
-          
-         
             path="/course/:courseId/video/:videoId"
             component={StudentCourseVideoPage}
+          />,
+          <Switch>
+            <Route
+            exact
+            key="search"
+            path="/search/courses"
+            component={SearchPage}
           />
+          </Switch>
+          
         ];
       }
     } else {
@@ -70,7 +78,7 @@ class App extends Component {
             <Header />
             <div id="content-wrap">{this.renderRoute()}</div>
             <div id="footer">
-            <FooterNav />
+              <FooterNav />
             </div>
           </div>
         </BrowserRouter>

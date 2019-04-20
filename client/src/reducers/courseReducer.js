@@ -16,7 +16,10 @@ import {
   DELETE_COURSE,
   DELETE_COURSE_SUCCESS,
   DELETE_COURSE_ERROR,
-  CLEAR_DATA
+  CLEAR_DATA,
+  SEARCH_COURSE,
+  SEARCH_COURSE_SUCCESS,
+  SEARCH_COURSE_ERROR
 } from "../actions/types";
 
 export default function(
@@ -29,6 +32,7 @@ export default function(
     teachers: false,
     updatedCourse: false,
     deleteStatus: false,
+    value: false,
   },
   action
 ) {
@@ -161,7 +165,29 @@ export default function(
         loading:false,
         course:false,
         singleCourse:false,
+        value:false,
         
+      }
+    case SEARCH_COURSE:
+      return{
+        ...state,
+        error:false,
+        loading:true,
+        value:false,
+      }
+    case SEARCH_COURSE_SUCCESS:
+      return{
+        ...state,
+        error:false,
+        value:action.payload,
+        loading:false,
+      }
+    case SEARCH_COURSE_ERROR:
+      return{
+        ...state,
+        error:action.payload,
+        value:false,
+        loading:false,
       }
     default:
       return state;

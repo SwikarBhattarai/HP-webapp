@@ -29,6 +29,9 @@ import {
   DELETE_COURSE_SUCCESS,
   DELETE_COURSE_ERROR,
   CLEAR_DATA,
+  SEARCH_COURSE,
+  SEARCH_COURSE_SUCCESS,
+  SEARCH_COURSE_ERROR,
 } from './types'
 
  export const fetchUser = () => async dispatch => {
@@ -168,6 +171,16 @@ export const deleteCourse =(id) => async dispatch =>{
   }
 }
 
-export const clearData=() =>dispatch =>{
+export const clearData=() => dispatch =>{
   dispatch({type:CLEAR_DATA})
+}
+
+export const searchCourse =(value) => async dispatch =>{
+  try{
+    dispatch({type:SEARCH_COURSE})
+    const res = await axios.post("/api/search/courses", {value})
+    dispatch({type:SEARCH_COURSE_SUCCESS, payload: res.data})
+  }catch(error){
+    dispatch({type:SEARCH_COURSE_ERROR, payload:error})
+  }
 }

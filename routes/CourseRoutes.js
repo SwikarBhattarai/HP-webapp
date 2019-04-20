@@ -134,7 +134,7 @@ module.exports = app => {
       videos: courseVideos
     }).save(error => {
       if (error) {
-        console.log(error);p
+        res.send(error)
       } else {
         res.send(newCourse)
         console.log("Course saved to DB!");
@@ -148,8 +148,7 @@ module.exports = app => {
       if (err) {
         console.log(err);
       } else {
-        res.send(allCourses);
-        console.log("allcourse", allCourses);
+        res.send(allCourses)
       }
     });
   });
@@ -203,6 +202,19 @@ module.exports = app => {
         console.log(error)
       }else{
         res.send({message: 'Course was successfully deleted!'})
+      }
+    })
+  })
+
+  app.post("/api/search/courses", function(req,res){
+    var replace = req.body.value;
+    var re = new RegExp(replace, "i");
+    console.log('value', req.body)
+    Course.findOne({courseTitle: re }, function(err, course){
+      if(err){
+        res.send({message:'No Course Found!'})
+      }else{
+        res.send(course)
       }
     })
   })

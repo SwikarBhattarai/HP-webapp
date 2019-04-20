@@ -8,6 +8,7 @@ import LoginPage from "../LoginPage";
 import logo from "../../assets/logo.svg"
 import { withRouter, Redirect } from "react-router-dom";
 import SearchField from "../SearchField";
+import {searchCourse, clearData} from '../../actions'
 
 const menu = (
   <Menu>
@@ -27,8 +28,9 @@ const menu = (
 class Header extends React.Component {
   state = {
     current: "logo",
-    visible: false
+    visible: false,
   };
+
 
   handleClick = e => {
     this.setState({
@@ -57,8 +59,15 @@ class Header extends React.Component {
     });
   };
 
+  search = (v) =>{
+    console.log('search', v)
+    this.props.searchCourse(v)
+    this.props.history.push('/search/courses')
+
+  }
+
   renderContent() {
-    console.log('props', this.props.auth)
+    
     switch (this.props.auth) {
       case null:
         return;
@@ -167,7 +176,7 @@ class Header extends React.Component {
             </SubMenu> */}
 
             <Menu.Item style={{ fontSize: 16, color: "white" }} key="search">
-              <SearchField />
+              <SearchField search={(v)=>this.search(v)} />
             </Menu.Item>
 
             {this.renderContent()}
@@ -196,4 +205,9 @@ function mapStateToProps({ auth }) {
   return { auth };
 }
 
-export default withRouter(connect(mapStateToProps)(Header));
+const mapDispatchToProps = dispatch =>({
+  searchCourse:(value) =>dispatch(searchCourse(value)),
+  clearData:() => dispatch(clearData())
+})
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Header));

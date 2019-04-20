@@ -27,4 +27,7 @@ export const DELETE_COURSE = "delete_course"
 export const DELETE_COURSE_SUCCESS = "delete_course_success"
 export const DELETE_COURSE_ERROR = "delete_course_error"
 export const CLEAR_DATA = "clear_data"
+export const SEARCH_COURSE = "search_course"
+export const SEARCH_COURSE_SUCCESS = "search_course_success"
+export const SEARCH_COURSE_ERROR = "search_course_error"
 
