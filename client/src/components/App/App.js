@@ -30,15 +30,20 @@ class App extends Component {
       if (this.props.auth.isAdmin) {
         return [
           <Route exact path="/home" component={AdminHomePage} />,
+          <Route exact path="/" component={AdminHomePage} />,
           <Route exact path="/add-course" component={AddCourse} />,
           <Route exact path="/add-teacher" component={AddTeacher} />,
           <Route exact path="/:id/edit" component={EditCourse} />
         ];
       } else if (this.props.auth.isTeacher) {
-        return [<Route exact path="/home" component={TeacherHomePage} />];
+        return [
+          <Route exact path="/home" component={TeacherHomePage} />,
+          <Route exact path="/" component={TeacherHomePage} />
+        ];
       } else {
         return [
           <Route exact key="home" path="/home" component={StudentHomePage} />,
+          <Route exact key="home" path="/" component={StudentHomePage} />,
           // <Route
           //   exact
           //   key="video"
@@ -51,13 +56,12 @@ class App extends Component {
           />,
           <Switch>
             <Route
-            exact
-            key="search"
-            path="/search/courses"
-            component={SearchPage}
-          />
+              exact
+              key="search"
+              path="/search/courses"
+              component={SearchPage}
+            />
           </Switch>
-          
         ];
       }
     } else {

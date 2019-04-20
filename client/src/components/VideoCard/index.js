@@ -3,12 +3,6 @@ import VideoPlayer from 'react-video-js-player';
  
 class VideoCard extends Component {
     player = {}
-    state = {
-        video: {
-            src: "",
-            poster: "http://www.example.com/path/to/video_poster.jpg"
-        }
-    }
  
     onPlayerReady(player){
         console.log("Player is ready: ", player);
@@ -57,7 +51,6 @@ class VideoCard extends Component {
                     controls={true}
                     src={this.props.src}
                     load={this.props.preload}
-                    poster={this.state.video.poster}
                     width="800"
                     height="420"
                     onReady={this.onPlayerReady.bind(this)}

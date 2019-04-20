@@ -5,3 +5,18 @@ head{
 
 }
 
+.logo{
+    float: left;
+    padding: 10px 10px;
+    font-size: 19px;
+    line-height: 21px;
+    height: 65px;
+    max-width: 220px;
+    display: table;
+
+}
+
+.ant-menu.ant-menu-dark .ant-menu-item-selected.customclass {
+  background-color: #001529; 
+
+}

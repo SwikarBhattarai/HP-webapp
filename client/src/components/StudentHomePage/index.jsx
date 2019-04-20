@@ -11,7 +11,17 @@ import CourseCard from "../CourseCard";
 
 
 class StudentHomePage extends Component {
-  componentWillMount() {
+  componentDidMount() {
+    this.fetchCourse();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.course.course._id !== this.props.course.course._id) {
+      this.fetchCourse();
+    }
+  }
+
+  fetchCourse() {
     this.props.fetchCourse();
   }
 
@@ -125,7 +135,7 @@ class StudentHomePage extends Component {
                         description={item.description}
                         features={item.feature}
                         thumbnail={item.thumbnail}
-                        id={item._id}
+                        item={item}
                       />
                     </List.Item>
                   )}
@@ -158,7 +168,7 @@ class StudentHomePage extends Component {
                       description={item.description}
                       features={item.feature}
                       thumbnail={item.thumbnail}
-                      id={item._id}
+                      item={item}
                     />
                   </List.Item>
                 )}

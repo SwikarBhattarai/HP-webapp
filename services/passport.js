@@ -1,5 +1,6 @@
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth20')
+const LocalStrategy = require('passport-local')
 const keys = require('../config/keys')
 const mongoose = require('mongoose')
 
@@ -36,3 +37,25 @@ async (accessToken, refreshToken, profile, done) => {
     done(null, user)
   }
 ))
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.use(new LocalStrategy({
+  usernameField: 'user[email]',
+  passwordField: 'user[password]'
+
+},(username, password, done) =>{
+  User.findOne({ teacherEmail: username, password: password }, function (err, user) {
+    if (err) { return done(err); }
+    if (!user) { return done(null, false); }
+    console.log('user', user)
+    return done(null, user);
+  });
+}
+));

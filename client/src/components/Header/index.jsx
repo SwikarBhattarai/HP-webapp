@@ -5,10 +5,10 @@ import { Layout, Menu, Icon, Modal, Button, Dropdown, Avatar } from "antd";
 import "./style.css";
 import Payments from "../Payments";
 import LoginPage from "../LoginPage";
-import logo from "../../assets/logo.svg"
+import logo from "../../assets/logo.png";
 import { withRouter, Redirect } from "react-router-dom";
 import SearchField from "../SearchField";
-import {searchCourse, clearData} from '../../actions'
+import { searchCourse, clearData } from "../../actions";
 
 const menu = (
   <Menu>
@@ -28,9 +28,8 @@ const menu = (
 class Header extends React.Component {
   state = {
     current: "logo",
-    visible: false,
+    visible: false
   };
-
 
   handleClick = e => {
     this.setState({
@@ -59,27 +58,29 @@ class Header extends React.Component {
     });
   };
 
-  search = (v) =>{
-    console.log('search', v)
-    this.props.searchCourse(v)
-    this.props.history.push('/search/courses')
-
-  }
+  search = v => {
+    console.log("search", v);
+    this.props.searchCourse(v);
+    this.props.history.push("/search/courses");
+  };
 
   renderContent() {
-    
     switch (this.props.auth) {
       case null:
         return;
       case false:
         return (
-          <Menu.Item key="signup" style={{ float: "right" }}>
+          <Menu.Item
+            key="signup"
+            style={{ float: "right" }}
+            className="customclass"
+          >
             <a onClick={this.showModal}>Sign in / Sign up</a>
           </Menu.Item>
         );
       default:
         return [
-          <Menu.Item key="payments">
+          <Menu.Item key="payments" className="customclass">
             {this.props.auth.isAdmin ? (
               <Link to="/add-teacher">
                 <Button ghost>Add Teacher</Button>
@@ -88,7 +89,7 @@ class Header extends React.Component {
               <Payments />
             )}
           </Menu.Item>,
-          <Menu.Item key="credits">
+          <Menu.Item key="credits" className="customclass">
             {this.props.auth.isAdmin ? (
               <Link to="/add-course">
                 <Button ghost>Add Course</Button>
@@ -106,9 +107,17 @@ class Header extends React.Component {
             <Dropdown overlay={menu}>
               <div>
                 {this.props.auth.isAdmin || !this.props.auth.isTeacher ? (
-                  <Avatar
-                    src={this.props.auth ? this.props.auth.photo[0].value : ""}
-                  />
+                  <div>
+                    <Avatar
+                      src={
+                        this.props.auth ? this.props.auth.photo[0].value : ""
+                      }
+                    />
+                    <Icon
+                      style={{ fontWeight: "bold", marginLeft:3, color: "white" }}
+                      type="down"
+                    />
+                  </div>
                 ) : (
                   <Icon
                     style={{ fontWeight: "bold", color: "white" }}
@@ -143,8 +152,12 @@ class Header extends React.Component {
             theme="dark"
             style={{ lineHeight: "64px" }}
           >
-            <Menu.Item key="logo" style={{ fontSize: 16, color: "white" }}>
-              <a
+            <Menu.Item
+              key="logo"
+              className="customclass"
+              style={{ fontSize: 16, color: "white" }}
+            >
+              {/* <a
                 style={{ color: "white" }}
                 href={
                   this.props.auth ? "/home" : "/"
@@ -153,30 +166,19 @@ class Header extends React.Component {
                 <Icon type="smile" />
                 Hamro Paathsala
                
+              </a> */}
+              <a href="/home">
+              <img src={logo} className="logo" />
               </a>
+             
             </Menu.Item>
 
-            {/* <SubMenu
+            <Menu.Item
               style={{ fontSize: 16, color: "white" }}
-              title={
-                <span className="submenu-title-wrapper">
-                  <Icon type="heart" />
-                  Courses
-                </span>
-              }
+              className="customclass"
+              key="search"
             >
-              <MenuItemGroup title="JavaScript">
-                <Menu.Item key="setting:1">React js</Menu.Item>
-                <Menu.Item key="setting:2">Node js</Menu.Item>
-              </MenuItemGroup>
-              <MenuItemGroup title="Java">
-                <Menu.Item key="setting:3">Beginner's Guide</Menu.Item>
-                <Menu.Item key="setting:4">Spring Framework</Menu.Item>
-              </MenuItemGroup>
-            </SubMenu> */}
-
-            <Menu.Item style={{ fontSize: 16, color: "white" }} key="search">
-              <SearchField search={(v)=>this.search(v)} />
+              <SearchField search={v => this.search(v)} />
             </Menu.Item>
 
             {this.renderContent()}
@@ -205,9 +207,14 @@ function mapStateToProps({ auth }) {
   return { auth };
 }
 
-const mapDispatchToProps = dispatch =>({
-  searchCourse:(value) =>dispatch(searchCourse(value)),
-  clearData:() => dispatch(clearData())
-})
+const mapDispatchToProps = dispatch => ({
+  searchCourse: value => dispatch(searchCourse(value)),
+  clearData: () => dispatch(clearData())
+});
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Header));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Header)
+);

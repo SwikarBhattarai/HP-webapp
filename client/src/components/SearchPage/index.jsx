@@ -14,15 +14,17 @@ class SearchPage extends Component {
   render() {
     console.log("value", this.props.course);
     const { value, loading } = this.props.course;
+
+    console.log('object',  typeof value ==="array")
     return (
       <div>
-        {typeof value !== "object" ? (
+        {typeof value !== Object ? (
           <div>
             {!loading ? (
               <Wrapper>
                 <ContentDiv>
                   {value ? (
-                    <div style={{ height: 400, width: 300 }}>
+                    <div>
                       <Title style={{ marginBottom: 15 }}>
                         Searched Courses!
                       </Title>

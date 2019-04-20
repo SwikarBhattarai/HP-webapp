@@ -46,14 +46,15 @@ module.exports = app => {
 
   app.post(
     "/api/auth",
-    // passport.authenticate('local'),
+    passport.authenticate('local'),
     async (req, res) => {
+      console.log('api', req.user)
       res.send(req.user);
     }
   );
 
   app.get("/api/fetchTeachers", async (req, res) => {
-    User.find({ isTeacher: true }, "name teacherEmail", function(err, teacher) {
+    User.find({ isTeacher: true }, "name email", function(err, teacher) {
       if (err) return handleError(err);
       else {
         res.send(teacher);

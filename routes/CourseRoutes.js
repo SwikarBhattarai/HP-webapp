@@ -210,7 +210,7 @@ module.exports = app => {
     var replace = req.body.value;
     var re = new RegExp(replace, "i");
     console.log('value', req.body)
-    Course.findOne({courseTitle: re }, function(err, course){
+    Course.find( {courseTitle: re }, function(err, course){
       if(err){
         res.send({message:'No Course Found!'})
       }else{
