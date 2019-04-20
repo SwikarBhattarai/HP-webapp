@@ -78,12 +78,12 @@ class EditCourse extends Component {
           videos: this.state.videos
         };
 
-        // console.log("values", data);
+        console.log("data", data);
   
 
-        this.props.updateCourse(data, this.props.match.params.id);
+        // this.props.updateCourse(data, this.props.match.params.id);
       
-        console.log("course", this.props.course.course);
+        // console.log("course", this.props.course.course);
       }
     });
   };
@@ -181,7 +181,7 @@ class EditCourse extends Component {
               <div style={{ marginBottom: 10 }}>
                 <Input
                   name="videoTitle"
-                  value={v.title}
+                  defaultValue={v.title}
                   placeholder="Video Title"
                   onChange={this.handleVideoTitleChange(i)}
                   style={{ width: "60%", marginRight: 8 }}
@@ -251,7 +251,7 @@ class EditCourse extends Component {
                   rules: [
                     { required: true, message: "Teacher name is required!" }
                   ],
-                  initialValue: this.props.course.course.teacher.name
+                  initialValue: this.props.course.course.teacher
                 })(
                   <Select
                     placeholder="select a teacher..."
@@ -259,7 +259,7 @@ class EditCourse extends Component {
                   >
                     {this.props.course.teachers
                       ? this.props.course.teachers.map(teacher => (
-                          <Option value={teacher}>{teacher.name}</Option>
+                          <Option value={teacher.name}>{teacher.name}</Option>
                         ))
                       : ""}
                   </Select>
@@ -351,16 +351,19 @@ class EditCourse extends Component {
               <Form.Item label="Upload a Thumbnail">
                 {getFieldDecorator("thumbnail", {
                   valuePropName: "file",
+                  getValueFromEvent: this.normFile,
                   rules: [
                     
                   ],
+                  
                 })(
                   <Upload
-                    action="api/upload"
+                    action="/api/upload"
                     listType="picture"
                     defaultFileList={[
                       {
                         uid: "1",
+                        name:"thumbnail.png",
                         status: "done",
                         response: "Server Error 500", // custom error message to show
                         url: this.props.course.course.thumbnail,

@@ -185,7 +185,7 @@ class StudentHomePage extends Component {
                     <List.Item>
                       <CourseCard
                         title={item.courseTitle}
-                        teacherName={item.teacher.name}
+                        teacherName={item.teacher}
                         price={item.coursePrice}
                         level={item.courseLevel}
                         status={item.status}
@@ -194,7 +194,7 @@ class StudentHomePage extends Component {
                         description={item.description}
                         thumbnail={item.thumbnail}
                         features={item.feature}
-                        id={item._id}
+                        item={item}
                       />
                     </List.Item>
                   )}
@@ -222,7 +222,7 @@ class StudentHomePage extends Component {
                     <List.Item>
                       <CourseCard
                         title={item.courseTitle}
-                        teacherName={item.teacher.name}
+                        teacherName={item.teacher}
                         price={item.coursePrice}
                         level={item.courseLevel}
                         status={item.status}
@@ -255,7 +255,7 @@ class StudentHomePage extends Component {
                   <List.Item>
                     <CourseCard
                       title={item.courseTitle}
-                      teacherName={item.teacher.name}
+                      teacherName={item.teacher}
                       price={item.coursePrice}
                       level={item.courseLevel}
                       status={item.status}

@@ -4,130 +4,66 @@ import { Breadcrumb } from "antd";
 import { Card, Spin, List, Avatar, Icon } from "antd";
 import VideoCard from "../VideoCard";
 import VideosScrollBar from "../VideosScrollBar";
-import { fetchSingleCourse } from "../../actions";
+import { fetchSingleCourse, clearData } from "../../actions";
 import { withRouter } from "react-router-dom";
 import { reactLocalStorage } from "reactjs-localstorage";
 import { connect } from "react-redux";
 
 class StudentCourseVideoPage extends Component {
-  state = {
-    videos: [],
-    video: {
-      file: "",
-      description: "",
-      title: ""
-    },
-    clicked: false
-  };
+
+  state={
+    id:'',
+  }
+  
   componentWillMount() {
     console.log("big ", this.props);
     this.props.fetchSingleCourse(this.props.match.params.courseId);
+    }
+
+  componentWillUnmount(){
+    this.props.clearData()
   }
 
-  componentDidUpdate() {
-    if (this.props.course.singleCourse.videos) {
-      console.log("props", this.props.course.singleCourse.videos[0]);
-      if (!this.state.video.file) {
-        this.setState({
-          video: reactLocalStorage.getObject("video"),
-          videos: this.props.course.singleCourse.videos
-        });
+    componentDidUpdate(prevProps){
+      const {match, course} = this.props
+      if(match.params.videoId !==prevProps.match.params.videoId){
+        this.props.fetchSingleCourse(this.props.match.params.courseId)
       }
     }
+  
+  componentDidMount(){
+    this.props.fetchSingleCourse(this.props.match.params.courseId)
   }
+  
 
-  componentDidMount() {
-    if (
-      reactLocalStorage.getObject("video") &&
-      this.props.course.singleCourse.videos
-    ) {
-      console.log("localstorage", reactLocalStorage.getObject("video"));
-      this.setState({
-        video: reactLocalStorage.getObject("video"),
-        videos: this.props.course.singleCourse.videos
-      });
+
+  handleItemClick = item => {
+    console.log('item', item)
+    if(this.props.course.singleCourse.videos){
+      const id = item._id
+    this.props.history.push(`/course/${this.props.match.params.courseId}/video/${id}`)
     }
-  }
-  // if(this.props.course.course.videos){
-  //   console.log('props', this.props.course.course.videos[0])
-  //   if(this.state.video.file){
-  //     this.setState({
-  //       videos: this.props.course.course.videos
-  //     })
-  //   }
-
-  //   // }
-  // }
-
-  // if(localStorage.getItem('file')){
-  //   const file = localStorage.getItem('file')
-  //   const title = localStorage.getItem('title')
-  //   this.setState({
-  //     video:{
-  //       file:file,
-  //       title:title,
-  //     }
-  //   })
-  // }
-
-  refresh() {
-    this.setState({
-      video: {
-        title: "",
-        file: "",
-        description: ""
-      }
-    });
-  }
-
-  getState() {
-    var selectedState = localStorage.getItem("");
-  }
-
-  handleItemClick = e => {
-    reactLocalStorage.setObject("video", {
-      file: e.file,
-      title: e.title,
-      description: e.description
-    });
-
-    window.location.reload();
-
-    // console.log('file', localStorage.getItem('file'))
-    // this.setState({
-
-    //   video:{
-    //     title:localStorage.getItem('title'),
-    //     file:localStorage.getItem('file'),
-    //     description:localStorage.getItem('description'),
-    //   },
-    //   preload:true,
-    // })
   };
+
+
 
   render() {
     const { videos } = this.props.course.singleCourse;
+    const {match} = this.props
 
-    console.log('singleCourse', this.props.course.singleCourse)
+    const video = this.props.course.singleCourse ? videos.find((video)=> match.params.videoId === video._id) : ''
 
-    console.log("video", this.state.video);
-    console.log("videos", this.state.videos);
-
-    const video = (videos || [])[0];
-
-    console.log("vido", video);
+    console.log('video', video)
 
     return (
       <Wrapper>
-        {this.state.video.file ||
-        this.state.video.title ||
-        this.state.video.description ? (
+        {this.props.course.singleCourse.videos ? (
           <div>
             <Breadcrumb.Item>
               <a href="/home">Home</a>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <a>{this.state.video.title}</a>
+              <a>{video.title}</a>
             </Breadcrumb.Item>
             <ContentDiv
               style={{
@@ -144,15 +80,14 @@ class StudentCourseVideoPage extends Component {
                 }}
               >
                 <VideoCard
-                  src={this.state.video.file}
-                  preload={this.state.preload}
+                  src={video.file}
                 />
                 <Title>Overview</Title>
                 <Card
-                  title={this.state.video.title}
+                  title={video.title}
                   style={{ marginTop: 10, width: 800 }}
                 >
-                  <p>{this.state.video.description}</p>
+                  <p>{video.description}</p>
                 </Card>
               </div>
               <div>
@@ -170,7 +105,7 @@ class StudentCourseVideoPage extends Component {
                   <List
                     style={{ maxHeight: 500, align:'justify' }}
                     itemLayout="horizontal"
-                    dataSource={this.state.videos}
+                    dataSource={videos}
                     renderItem={item => (
                       <List.Item
                         onClick={() => this.handleItemClick(item)}
@@ -205,7 +140,8 @@ const mapStateToProps = ({ course }) => {
   return { course };
 };
 const mapDispatchToProps = dispatch => ({
-  fetchSingleCourse: courseId => dispatch(fetchSingleCourse(courseId))
+  fetchSingleCourse: courseId => dispatch(fetchSingleCourse(courseId)),
+  clearData:() => dispatch(clearData())
 });
 
 export default connect(

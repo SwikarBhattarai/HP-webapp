@@ -4,6 +4,7 @@ const {Schema} = mongoose
 const userSchema = new Schema({
   googleId: String,
   isAdmin: {type:Boolean, default:false},
+  isTeacher: {type:Boolean, default:false},
   email: Array,
   name:Object,
   photo:Array,

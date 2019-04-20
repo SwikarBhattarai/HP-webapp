@@ -4,24 +4,44 @@ import { withRouter, Redirect } from "react-router-dom";
 import { Wrapper, Title, ContentDiv } from "../Wrapper";
 import { List } from "antd";
 import CourseCard from "../CourseCard";
-import { fetchCourse, editCourse } from "../../actions";
+import { fetchCourse, editCourse, deleteCourse } from "../../actions";
+import { message, Spin } from "antd";
 import "./style.css";
 
 import ColorCard from "../ColorCard";
 
 class AdminHomePage extends Component {
+  state = {
+    loading: false
+  };
   componentDidMount() {
     this.props.fetchCourse();
-  
   }
 
-  delete = e => {
-    alert("i m delete");
+  cancel = () => {
+    message.error("Cancelled");
+  };
+
+  confirm = item => {
+    console.log("i", item);
+    this.props.deleteCourse(item._id);
+    if (this.props.course) {
+      if (this.props.course.loading && !this.props.course.course) {
+        this.setState({
+          loading: true
+        });
+      } else {
+        message.success("Deleted");
+        this.setState({
+          loading: false
+        });
+      }
+    }
   };
 
   edit = item => {
     this.props.editCourse(item._id);
-    this.props.history.push(`/${item._id}/edit`)
+    this.props.history.push(`/${item._id}/edit`);
   };
   render() {
     return (
@@ -33,6 +53,7 @@ class AdminHomePage extends Component {
         {this.props.course.course ? (
           <ContentDiv>
             <Title>ALL COURSES</Title>
+            {this.state.loading ? <Spin tip="Deleting..." /> : ""}
             <List
               style={{ marginTop: 12 }}
               grid={{
@@ -49,7 +70,7 @@ class AdminHomePage extends Component {
                 <List.Item>
                   <CourseCard
                     title={item.courseTitle}
-                    teacherName={item.teacher.name}
+                    teacherName={item.teacher}
                     price={item.coursePrice}
                     level={item.courseLevel}
                     status={item.status}
@@ -59,8 +80,9 @@ class AdminHomePage extends Component {
                     thumbnail={item.thumbnail}
                     features={item.feature}
                     id={item._id}
-                    delete={() => this.delete(item)}
                     edit={() => this.edit(item)}
+                    confirm={() => this.confirm(item)}
+                    cancel={() => this.cancel()}
                   />
                 </List.Item>
               )}
@@ -80,7 +102,8 @@ function mapStateTopProps({ course }) {
 
 const mapDispatchToProps = dispatch => ({
   fetchCourse: () => dispatch(fetchCourse()),
-  editCourse: (id) => dispatch(editCourse(id))
+  editCourse: id => dispatch(editCourse(id)),
+  deleteCourse: id => dispatch(deleteCourse(id))
 });
 
 export default withRouter(

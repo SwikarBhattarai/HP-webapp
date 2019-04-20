@@ -11,7 +11,8 @@ import {
   Upload,
   Icon,
   notification,
-  message
+  message,
+  Spin,
 } from "antd";
 import { Wrapper } from "../Wrapper";
 import { addCourse, fetchTeachers } from "../../actions";
@@ -28,12 +29,21 @@ children.push(<Option key="Beginner">Beginner</Option>);
 children.push(<Option key="Intermediate">Intermediate</Option>);
 children.push(<Option key="Advanced">Advanced</Option>);
 
+const openNotification = type => {
+  notification[type]({
+    message: "Course Added!",
+    description: "The course was added successfully."
+  });
+};
+
 class AddCourseForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      loading: false,
       courseId: 0,
+      disabled: false,
       selectedFile: "",
       selectedVideos: [],
       title: "",
@@ -65,7 +75,9 @@ class AddCourseForm extends Component {
       if (!err) {
         console.log("values", values);
         console.log("videos", this.state.videos);
-
+        this.setState({
+          loading: true
+        });
         const data = {
           courseId: this.state.courseId,
           courseDetails: values,
@@ -78,8 +90,6 @@ class AddCourseForm extends Component {
         this.setState({
           courseId: this.state.courseId + 1
         });
-
-        console.log("course", this.props.course.course);
       }
     });
   };
@@ -140,12 +150,28 @@ class AddCourseForm extends Component {
         return { ...video, file: response };
       });
       this.setState({
-        videos: newVideo
+        videos: newVideo,
+        disabled: false
+      });
+    } else {
+      this.setState({ disabled: true });
+    }
+
+    if (evt.file.status === "removed") {
+      this.setState({
+        disabled: false
       });
     }
 
     console.log("videos", this.state.videos);
   };
+
+  // handleFileRemove =(i) =>{
+  //   console.log('i', i)
+  //   this.setState({
+  //     disabled: !this.state.disabled,
+  //   })
+  // }
 
   render() {
     console.log("teachers", this.props.teachers);
@@ -189,12 +215,13 @@ class AddCourseForm extends Component {
           onChange={this.handleFileChange(i)}
           action="/api/uploadVideos"
           listType="picture"
+          // onRemove={this.handleFileRemove}
         >
           <Button>
             <Icon type="upload" /> Click to upload
           </Button>
         </Upload>
-        
+
         {/* 
         {keys.length > 1 ? (
           <Icon
@@ -214,138 +241,156 @@ class AddCourseForm extends Component {
           alignItems: "center"
         }}
       >
+      {this.props.course ?(
         <Card style={{ width: 1000 }} bordered>
-          <h1 style={{ textAlign: "center", fontWeight: "bold" }}>
-            ADD NEW COURSE
-          </h1>
-          <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-            <Form.Item label="Course Title">
-              {getFieldDecorator("courseTitle", {
-                rules: [
-                  { required: true, message: "Course Title is required!" }
-                ]
-              })(<Input />)}
-            </Form.Item>
-            <Form.Item label="Teacher">
-              {getFieldDecorator("teacher", {
-                rules: [
-                  { required: true, message: "Teacher name is required!" }
-                ]
-              })(
-                <Select placeholder="select a teacher..." style={{ width: 200 }}>
-                  {this.props.course.teachers
-                    ? this.props.course.teachers.map(teacher => (
-                        <Option value={teacher}>{teacher.name}</Option>
-                      ))
-                    : ""}
-                </Select>
-              )}
-            </Form.Item>
-            <Form.Item label="Course Price">
-              {getFieldDecorator("coursePrice", {
-                initialValue: 1,
-                rules: [{ required: true, message: "Price is required!" }]
-              })(
-                <InputNumber
-                  min={1}
-                  max={500}
-                  formatter={value =>
-                    `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  }
-                  parser={value => value.replace(/\$\s?|(,*)/g, "")}
-                />
-              )}
-            </Form.Item>
-            <Form.Item label="Total Videos">
-              {getFieldDecorator("totalVideos", {
-                initialValue: 1,
-                rules: [
-                  { required: true, message: "Total Videos is required!" }
-                ]
-              })(<InputNumber min={1} max={50} />)}
-            </Form.Item>
-            <Form.Item label="Total Duration">
-              {getFieldDecorator("totalDuration", {
-                initialValue: 1,
-                rules: [
-                  { required: true, message: "Total Duration is required!" }
-                ]
-              })(<InputNumber min={1} max={5000} />)}
-              <span> Minutes</span>
-            </Form.Item>
-            <Form.Item label="Course Level">
-              {getFieldDecorator("courseLevel", {
-                rules: [
-                  {
-                    required: true,
-                    message: "Level is required!",
-                    type: "string"
-                  }
-                ]
-              })(
-                <Select
-                  mode="default"
-                  style={{ width: "100%" }}
-                  placeholder="Please select"
-                >
-                  {children}
-                </Select>
-              )}
-            </Form.Item>
-            <Form.Item label="Description">
-              {getFieldDecorator("description", {
-                rules: [{ required: true, message: "Description is required!" }]
-              })(
-                <TextArea
-                  placeholder="Please add course description here"
-                  autosize
-                />
-              )}
-            </Form.Item>
-            <Form.Item label="Features">
-              {getFieldDecorator("feature1", {
-                rules: [{ required: true, message: "Feature 1 is required!" }]
-              })(<Input placeholder="Feature 1" allowClear />)}
-              {getFieldDecorator("feature2", {
-                rules: [{ required: true, message: "Feature 2 is required!" }]
-              })(<Input placeholder="Feature 2" allowClear />)}
+        <h1 style={{ textAlign: "center", fontWeight: "bold" }}>
+          ADD NEW COURSE
+        </h1>
+        <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+          <Form.Item label="Course Title">
+            {getFieldDecorator("courseTitle", {
+              rules: [
+                { required: true, message: "Course Title is required!" }
+              ]
+            })(<Input />)}
+          </Form.Item>
+          <Form.Item label="Teacher">
+            {getFieldDecorator("teacher", {
+              rules: [
+                { required: true, message: "Teacher name is required!" }
+              ]
+            })(
+              <Select
+                placeholder="select a teacher..."
+                style={{ width: 200 }}
+              >
+                {this.props.course.teachers
+                  ? this.props.course.teachers.map((teacher, i) => (
+                      <Option value={teacher.name}>{teacher.name}</Option>
+                    ))
+                  : ""}
+              </Select>
+            )}
+          </Form.Item>
+          <Form.Item label="Course Price">
+            {getFieldDecorator("coursePrice", {
+              initialValue: 1,
+              rules: [{ required: true, message: "Price is required!" }]
+            })(
+              <InputNumber
+                min={1}
+                max={500}
+                formatter={value =>
+                  `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                parser={value => value.replace(/\$\s?|(,*)/g, "")}
+              />
+            )}
+          </Form.Item>
+          <Form.Item label="Total Videos">
+            {getFieldDecorator("totalVideos", {
+              initialValue: 1,
+              rules: [
+                { required: true, message: "Total Videos is required!" }
+              ]
+            })(<InputNumber min={1} max={50} />)}
+          </Form.Item>
+          <Form.Item label="Total Duration">
+            {getFieldDecorator("totalDuration", {
+              initialValue: 1,
+              rules: [
+                { required: true, message: "Total Duration is required!" }
+              ]
+            })(<InputNumber min={1} max={5000} />)}
+            <span> Minutes</span>
+          </Form.Item>
+          <Form.Item label="Course Level">
+            {getFieldDecorator("courseLevel", {
+              rules: [
+                {
+                  required: true,
+                  message: "Level is required!",
+                  type: "string"
+                }
+              ]
+            })(
+              <Select
+                mode="default"
+                style={{ width: "100%" }}
+                placeholder="Please select"
+              >
+                {children}
+              </Select>
+            )}
+          </Form.Item>
+          <Form.Item label="Description">
+            {getFieldDecorator("description", {
+              rules: [{ required: true, message: "Description is required!" }]
+            })(
+              <TextArea
+                placeholder="Please add course description here"
+                autosize
+              />
+            )}
+          </Form.Item>
+          <Form.Item label="Features">
+            {getFieldDecorator("feature1", {
+              rules: [{ required: true, message: "Feature 1 is required!" }]
+            })(<Input placeholder="Feature 1" allowClear />)}
+            {getFieldDecorator("feature2", {
+              rules: [{ required: true, message: "Feature 2 is required!" }]
+            })(<Input placeholder="Feature 2" allowClear />)}
 
-              <Input placeholder="Feature 3" allowClear />
-              <Input placeholder="Feature 4" allowClear />
-              <Input placeholder="Feature 5" allowClear />
-            </Form.Item>
-            <Form.Item label="Upload a Thumbnail">
-              {getFieldDecorator("thumbnail", {
-                valuePropName: "file",
-                getValueFromEvent: this.normFile,
-                rules: [{ required: true, message: "Thumbnail is required!" }]
-              })(
-                <Upload name="file" action="/api/upload" listType="picture">
-                  <Button>
-                    <Icon type="upload" /> Click to upload
-                  </Button>
-                </Upload>
-              )}
-            </Form.Item>
-            {formItems}
-            <Form.Item {...formItemLayoutWithOutLabel}>
-              <Button type="dashed" onClick={this.add} style={{ width: "60%" }}>
-                <Icon type="plus" /> Add Videos
-              </Button>
-            </Form.Item>
-
-            <Divider />
+            <Input placeholder="Feature 3" allowClear />
+            <Input placeholder="Feature 4" allowClear />
+            <Input placeholder="Feature 5" allowClear />
+          </Form.Item>
+          <Form.Item label="Upload a Thumbnail">
+            {getFieldDecorator("thumbnail", {
+              valuePropName: "file",
+              getValueFromEvent: this.normFile,
+              rules: [{ required: true, message: "Thumbnail is required!" }]
+            })(
+              <Upload name="file" action="/api/upload" listType="picture">
+                <Button>
+                  <Icon type="upload" /> Click to upload
+                </Button>
+              </Upload>
+            )}
+          </Form.Item>
+          {formItems}
+          <Form.Item {...formItemLayoutWithOutLabel}>
             <Button
-              style={{ right: 0, float: "right", marginTop: 10 }}
-              type="primary"
-              size="large"
-              htmlType="submit"
+              type="dashed"
+              disabled={this.state.disabled}
+              onClick={this.add}
+              style={{ width: "60%" }}
             >
-              {this.props.course.loading ? <Icon type="loading" /> : ""}
-              Submit Course
+              <Icon type="plus" /> Add Videos
             </Button>
-          </Form>
-        </Card>
+          </Form.Item>
+
+          <Divider />
+          <Button
+            style={{ right: 0, float: "right", marginTop: 10 }}
+            type="primary"
+            size="large"
+            htmlType="submit"
+            disabled={this.state.disabled}
+          >
+            {this.props.course.loading ? (
+              <Icon type="loading" />
+            ) : (
+              ''
+            )}
+            Submit Course
+          </Button>
+        </Form>
+      </Card>
+      ):(
+        <Spin />
+      )}
+        
       </Wrapper>
     );
   }

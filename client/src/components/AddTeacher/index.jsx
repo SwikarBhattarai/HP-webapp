@@ -1,9 +1,17 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Card, Form, Input, Divider, Button } from "antd";
+import { Card, Form, Input, Divider, Button, notification, Icon } from "antd";
 import { Wrapper } from "../Wrapper";
 import { addTeacher } from "../../actions";
 import { connect } from "react-redux";
+
+const openNotification = () => {
+  notification.open({
+    message: 'Notification Title',
+    description: 'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+    icon: <Icon type="smile" style={{ color: '#108ee9' }} />,
+  });
+};
 
 class AddTeacherForm extends Component {
   handleSubmit = e => {
@@ -12,13 +20,16 @@ class AddTeacherForm extends Component {
       if (!err) {
         console.log("Received values of form: ", values);
         this.props.addTeacher(values);
+        if(!this.props.teacher.loading){
+          openNotification('success')
+        }
       }
     });
   };
   render() {
     const { getFieldDecorator } = this.props.form;
 
-    console.log("course", this.props.course);
+    console.log("teacher", this.props.teacher);
 
     const formItemLayout = {
       labelCol: {
@@ -71,7 +82,7 @@ class AddTeacherForm extends Component {
               size="large"
               htmlType="submit"
             >
-              {/* {this.props.course.loading ? <Icon type="loading" /> : ""} */}
+              {this.props.teacher.loading ? <Icon type="loading" /> : ""}
               Add Teacher
             </Button>
           </Form>

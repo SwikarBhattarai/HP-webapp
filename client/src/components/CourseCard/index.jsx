@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter, Redirect } from "react-router-dom";
-import { Card, Icon, Avatar, Modal, Button, Spin, notification } from "antd";
+import { Card, Icon, Avatar, Modal, Button, Popconfirm, message, notification } from "antd";
 import {
   deductCredit,
   unlockCourse,
@@ -40,12 +40,16 @@ class CourseCard extends Component {
         redirect: true
       });
 
-      console.log("propssss", this.props);
-      console.log("History", this.props.history);
+      console.log("id", this.props);
+      console.log("course", this.props.course);
 
-      let path = this.props.id;
+      console.log('item', this.props.item)
 
-      this.props.history.push(`/course/${path}`);
+      let courseId = this.props.item._id;
+      let videoId = this.props.item.videos[0]._id
+
+
+      this.props.history.push(`/course/${courseId}/video/${videoId}`);
     } else {
       this.setState({
         visible: true
@@ -64,7 +68,7 @@ class CourseCard extends Component {
     const amount = this.props.auth.credits;
     if (this.props.auth.credits < this.props.price) {
       openNotificationError("error");
-      this.props.fetchUser()
+      this.props.fetchUser();
     } else {
       const diffAmount = amount - this.props.price;
       const status = "unlocked";
@@ -90,27 +94,33 @@ class CourseCard extends Component {
   render() {
     const { Meta } = Card;
 
-    console.log('features', this.props.features)
     return (
       <div>
         <Card
           bordered
           size="default"
-          onClick={this.props.auth.isAdmin ? '' : this.showModal}
+          onClick={this.props.auth.isAdmin ? "" : this.showModal}
           hoverable
           cover={<img alt="example" src={this.props.thumbnail} />}
           actions={
-            this.props.auth.isAdmin ?(
-              [
-                <h2 onClick={this.props.delete}>
-                  <Icon type="delete" style={{color:'red'}} /> DELETE
-                </h2>,
-                <h2 onClick={this.props.edit}>
-                  <Icon type="edit" style={{color:'orange'}} /> EDIT
-                </h2>
-              ]
-            ):(
-              this.props.status === "locked"
+            this.props.auth.isAdmin
+              ? [
+                  <h2 onClick={this.props.delete}>
+                    <Popconfirm
+                      title="Are you sure delete this course?"
+                      onConfirm={this.props.confirm}
+                      onCancel={this.props.cancel}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <Icon type="delete" style={{ color: "red" }} /> DELETE
+                    </Popconfirm>
+                  </h2>,
+                  <h2 onClick={this.props.edit}>
+                    <Icon type="edit" style={{ color: "orange" }} /> EDIT
+                  </h2>
+                ]
+              : this.props.status === "locked"
               ? [
                   <h2>
                     <Icon type="lock" /> LOCKED
@@ -122,8 +132,6 @@ class CourseCard extends Component {
                     <Icon type="unlock" /> UNLOCKED
                   </h2>
                 ]
-            )
-           
           }
         >
           <Meta
@@ -166,9 +174,9 @@ class CourseCard extends Component {
           <h3>{this.props.description}</h3>
           <h4>Features:</h4>
           <ul>
-            {this.props.features ? this.props.features.map(feature => (
-              <li>{feature}</li>
-            )): ''} 
+            {this.props.features
+              ? this.props.features.map(feature => <li>{feature}</li>)
+              : ""}
           </ul>
         </Modal>
       </div>

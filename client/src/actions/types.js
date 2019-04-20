@@ -23,4 +23,8 @@ export const EDIT_COURSE_ERROR ="edit_course_error"
 export const UPDATE_COURSE = "update_course"
 export const UPDATE_COURSE_SUCCESS = "update_course_success"
 export const UPDATE_COURSE_ERROR = "update_course_error"
+export const DELETE_COURSE = "delete_course"
+export const DELETE_COURSE_SUCCESS = "delete_course_success"
+export const DELETE_COURSE_ERROR = "delete_course_error"
+export const CLEAR_DATA = "clear_data"
 

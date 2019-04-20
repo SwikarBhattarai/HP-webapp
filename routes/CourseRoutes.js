@@ -123,7 +123,7 @@ module.exports = app => {
     var newCourse = await new Course({
       courseId: req.body.course.courseDetails.courseId,
       courseTitle: req.body.course.courseDetails.courseTitle,
-      teacherName: req.body.course.courseDetails.teacherName,
+      teacher: req.body.course.courseDetails.teacher,
       coursePrice: req.body.course.courseDetails.coursePrice,
       totalVideos: req.body.course.courseDetails.totalVideos,
       totalDuration: req.body.course.courseDetails.totalDuration,
@@ -187,12 +187,24 @@ module.exports = app => {
 
   app.put("/api/:id", (req,res) =>{
     res.send(req.body)
-    // Course.findByIdAndUpdate(req.params.id, req.body.course, {new:true}, function(err, updatedCourse){
-    //   if(err) res.redirect("/home")
-    //   else{
-    //     res.send({message:"Course Updated"})
-    //     res.redirect("/home")
-    //   }
-    // })
+    Course.findByIdAndUpdate(req.params.id, req.body.course, {new:true}, function(err, updatedCourse){
+      if(err) res.redirect("/home")
+      else{
+        res.send({message:"Course Updated"})
+        res.redirect("/home")
+      }
+    })
   })
+
+  app.delete("/api/:id", function(req,res){
+    console.log('delete', req.params.id)
+    Course.findByIdAndRemove({_id: req.params.id}, function(err){
+      if(err){
+        console.log(error)
+      }else{
+        res.send({message: 'Course was successfully deleted!'})
+      }
+    })
+  })
+
 };

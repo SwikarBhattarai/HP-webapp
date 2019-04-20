@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const CourseSchema = new Schema({
   courseId: Number,
   courseTitle: String,
-  teacherName: String,
+  teacher: String,
   coursePrice: Number,
   status: {type:String, default:'locked'},
   totalVideos: Number,

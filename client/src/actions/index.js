@@ -24,7 +24,11 @@ import {
   EDIT_COURSE_ERROR,
   UPDATE_COURSE,
   UPDATE_COURSE_SUCCESS,
-  UPDATE_COURSE_ERROR
+  UPDATE_COURSE_ERROR,
+  DELETE_COURSE,
+  DELETE_COURSE_SUCCESS,
+  DELETE_COURSE_ERROR,
+  CLEAR_DATA,
 } from './types'
 
  export const fetchUser = () => async dispatch => {
@@ -152,4 +156,18 @@ export const updateCourse = (course, id) => async dispatch =>{
   }catch(error){
     dispatch({type:UPDATE_COURSE_ERROR, payload:error})
   }
+}
+
+export const deleteCourse =(id) => async dispatch =>{
+  try{
+    dispatch({type:DELETE_COURSE})
+    const res = await axios.delete(`/api/${id}`)
+    dispatch({type:DELETE_COURSE_SUCCESS, payload: res.data})
+  }catch(error){
+    dispatch({type:DELETE_COURSE_ERROR, payload:error})
+  }
+}
+
+export const clearData=() =>dispatch =>{
+  dispatch({type:CLEAR_DATA})
 }

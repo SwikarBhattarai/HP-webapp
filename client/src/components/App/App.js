@@ -24,6 +24,7 @@ class App extends Component {
   }
 
   renderRoute() {
+    console.log('auth', this.props.auth)
     if (this.props.auth) {
       if (this.props.auth.isAdmin) {
         return [
@@ -37,10 +38,16 @@ class App extends Component {
       } else {
         return [
           <Route exact key="home" path="/home" component={StudentHomePage} />,
+          // <Route
+          //   exact
+          //   key="video"
+          //   path="/course/:courseId"
+          //   component={StudentCourseVideoPage}
+          // />,
           <Route
-            exact
-            key="video"
-            path="/course/:courseId"
+          
+         
+            path="/course/:courseId/video/:videoId"
             component={StudentCourseVideoPage}
           />
         ];
@@ -59,11 +66,13 @@ class App extends Component {
     return (
       <div className="app">
         <BrowserRouter>
-          <Layout>
+          <div id="page-container">
             <Header />
-            <Content>{this.renderRoute()}</Content>
+            <div id="content-wrap">{this.renderRoute()}</div>
+            <div id="footer">
             <FooterNav />
-          </Layout>
+            </div>
+          </div>
         </BrowserRouter>
       </div>
     );
