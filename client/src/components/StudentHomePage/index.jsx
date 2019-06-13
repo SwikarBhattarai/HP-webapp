@@ -6,32 +6,41 @@ import { connect } from "react-redux";
 
 import "./style.css";
 import { Spin } from "antd";
-import { fetchCourse,clearData } from "../../actions";
+import { fetchCourse, clearData, fetchUserCourse } from "../../actions";
 import CourseCard from "../CourseCard";
 
-
 class StudentHomePage extends Component {
+
+
   componentDidMount() {
     this.fetchCourse();
+    this.fetchUserCourse();
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.course.course._id !== this.props.course.course._id) {
-      this.fetchCourse();
+  componentWillMount() {
+    this.fetchCourse();
+    this.fetchUserCourse();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.credits !== this.props.auth.credits) {
+      this.fetchUserCourse();
     }
   }
+
+
 
   fetchCourse() {
     this.props.fetchCourse();
   }
 
+  fetchUserCourse() {
+    this.props.fetchUserCourse(this.props.auth._id);
+  }
+
   render() {
-    const { course } = this.props.course;
-
-
-    const unlockedCourse = course
-      ? course.filter(course => course.status === "unlocked")
-      : "";
+    console.log("usercourse", this.props.course.userCourse);
+    const { course, userCourse } = this.props.course;
 
     (function() {
       if (typeof Object.defineProperty === "function") {
@@ -59,18 +68,50 @@ class StudentHomePage extends Component {
       }
     })();
 
-    const recentCourse = course
-      ? course.sortBy(function(o) {
+    const unlockedCourse = userCourse && userCourse.courses
+
+  
+      
+    console.log('unlock', unlockedCourse)
+
+    const fcourse =
+      course &&
+      course.map(course => {
+        return course;
+      });
+    console.log("f", fcourse);
+
+    const ucourse =
+      unlockedCourse &&
+      unlockedCourse.map(course => {
+        return course.course;
+      });
+
+ 
+
+
+    var allCourses =
+      fcourse && ucourse.length >=1
+        ? fcourse.filter(course1 => {
+           
+            return !ucourse.some(course2 => course1._id === course2._id);
+          })
+        : fcourse;
+      
+
+    const recentCourse = allCourses
+      ? allCourses.sortBy(function(o) {
           return o.addedTime;
         })
       : "";
 
+
     return (
       <Wrapper>
-        <h1>Welcome {this.props.auth.name.givenName},</h1>
-        {course ? (
+        {course && userCourse ? (
           <React.Fragment>
-            {unlockedCourse.length > 0 ? (
+            <Title>Welcome {this.props.auth.name.givenName},</Title>
+            {unlockedCourse.length >=1 && (
               <ContentDiv>
                 <Title>Unlocked Courses!</Title>
                 <List
@@ -88,29 +129,26 @@ class StudentHomePage extends Component {
                   renderItem={item => (
                     <List.Item>
                       <CourseCard
-                        title={item.courseTitle}
-                        teacherName={item.teacher}
-                        price={item.coursePrice}
-                        level={item.courseLevel}
+                        title={item.course.courseTitle}
+                        teacherName={item.course.teacher}
+                        price={item.course.coursePrice}
+                        level={item.course.courseLevel}
                         status={item.status}
-                        totalVideos={item.totalVideos}
-                        totalDuration={item.totalDuration}
-                        description={item.description}
-                        thumbnail={item.thumbnail}
-                        features={item.feature}
-                        item={item}
+                        totalVideos={item.course.totalVideos}
+                        totalDuration={item.course.totalDuration}
+                        description={item.course.description}
+                        thumbnail={item.course.thumbnail}
+                        features={item.course.feature}
+                        item={item.course}
                       />
                     </List.Item>
                   )}
                 />
               </ContentDiv>
-            ) : (
-              ""
             )}
-
-            <Title>All Courses!</Title>
-            <ContentDiv>
-              {course && (
+            {allCourses.length >= 1 && (
+              <ContentDiv>
+                <Title>All Courses!</Title>
                 <List
                   grid={{
                     gutter: 16,
@@ -121,7 +159,42 @@ class StudentHomePage extends Component {
                     xl: 4,
                     xxl: 3
                   }}
-                  dataSource={course}
+                  dataSource={allCourses}
+                  renderItem={item => (
+                    <List.Item>
+                      <CourseCard
+                        title={item.courseTitle}
+                        teacherName={item.teacher}
+                        price={item.coursePrice}
+                        level={item.courseLevel}
+                        status="locked"
+                        totalVideos={item.totalVideos}
+                        totalDuration={item.totalDuration}
+                        description={item.description}
+                        features={item.feature}
+                        thumbnail={item.thumbnail}
+                        item={item}
+                      />
+                    </List.Item>
+                  )}
+                />
+              </ContentDiv>
+            )}
+
+            {recentCourse.length >= 1 && (
+              <ContentDiv>
+                <Title>Recently added courses!</Title>
+                <List
+                  grid={{
+                    gutter: 16,
+                    xs: 1,
+                    sm: 2,
+                    md: 4,
+                    lg: 4,
+                    xl: 4,
+                    xxl: 3
+                  }}
+                  dataSource={recentCourse.slice(0, 5)}
                   renderItem={item => (
                     <List.Item>
                       <CourseCard
@@ -140,43 +213,11 @@ class StudentHomePage extends Component {
                     </List.Item>
                   )}
                 />
-              )}
-            </ContentDiv>
-            <Title>Recently added courses!</Title>
-            <ContentDiv>
-              <List
-                grid={{
-                  gutter: 16,
-                  xs: 1,
-                  sm: 2,
-                  md: 4,
-                  lg: 4,
-                  xl: 4,
-                  xxl: 3
-                }}
-                dataSource={recentCourse.slice(0, 5)}
-                renderItem={item => (
-                  <List.Item>
-                    <CourseCard
-                      title={item.courseTitle}
-                      teacherName={item.teacher}
-                      price={item.coursePrice}
-                      level={item.courseLevel}
-                      status={item.status}
-                      totalVideos={item.totalVideos}
-                      totalDuration={item.totalDuration}
-                      description={item.description}
-                      features={item.feature}
-                      thumbnail={item.thumbnail}
-                      item={item}
-                    />
-                  </List.Item>
-                )}
-              />
-            </ContentDiv>
+              </ContentDiv>
+            )}
           </React.Fragment>
         ) : (
-          <Spin />
+          <Spin size="large" style={{ textAlign: "center", marginTop: 50 }} />
         )}
       </Wrapper>
     );
@@ -189,10 +230,13 @@ const mapStateToProps = ({ auth, course }) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchCourse: () => dispatch(fetchCourse()),
-  clearData: () => dispatch(clearData())
+  clearData: () => dispatch(clearData()),
+  fetchUserCourse: id => dispatch(fetchUserCourse(id))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(StudentHomePage);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(StudentHomePage)
+);

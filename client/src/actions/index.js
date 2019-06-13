@@ -32,6 +32,14 @@ import {
   SEARCH_COURSE,
   SEARCH_COURSE_SUCCESS,
   SEARCH_COURSE_ERROR,
+  FETCH_TEACHER_COURSE,
+  FETCH_TEACHER_COURSE_SUCCESS,
+  FETCH_TEACHER_COURSE_ERROR,
+  FETCH_USER_COURSE,
+  FETCH_USER_COURSE_SUCCESS,
+  FETCH_USER_COURSE_ERROR,
+  FETCH_ALL_TEACHER,
+  FETCH_ALL_STUDENT,
 } from './types'
 
  export const fetchUser = () => async dispatch => {
@@ -63,32 +71,12 @@ export const addCourse = (course) => async dispatch =>{
  
 }
 
-// export const uploadVideos = (videos) => async dispatch =>{
-//   console.log('video details is', videos)
-//   try{
-//     dispatch({type:UPLOAD_VIDEOS})
-//     const res = await axios.post('/api/upload/videos', {videos})
-//     dispatch({type:UPLOAD_VIDEOS_SUCCESS, payload:res.data})
-//   }catch(error){
-//     dispatch({type:UPLOAD_VIDEOS_ERROR, payload:error})
-//   }
-// }
 
-// export const uploadImage = (image) => async dispatch =>{
-//   console.log('image details is', image)
-//   try{
-//     dispatch({type:UPLOAD_IMAGE})
-//     const res = await axios.post('/api/upload', {image})
-//     dispatch({type:UPLOAD_IMAGE_SUCCESS, payload:res.data})
-//   }catch(error){
-//     dispatch({type:UPLOAD_IMAGE_ERROR, payload:error})
-//   }
-// }
 
-export const unlockCourse = (status, id) => async dispatch =>{
+export const unlockCourse = (userId, courseId) => async dispatch =>{
   try{
     dispatch({type:UNLOCK_COURSE})
-    const res = await axios.post('api/unlockcourse', {status, id})
+    const res = await axios.post('api/unlockcourse', {userId, courseId})
     dispatch({
       type: UNLOCK_COURSE_SUCCESS, payload: res.data
     })
@@ -175,12 +163,47 @@ export const clearData=() => dispatch =>{
   dispatch({type:CLEAR_DATA})
 }
 
-export const searchCourse =(value) => async dispatch =>{
+export const searchCourse =(value, isAdmin) => async dispatch =>{
   try{
     dispatch({type:SEARCH_COURSE})
-    const res = await axios.post("/api/search/courses", {value})
+    const res = await axios.post("/api/search/courses", {value, isAdmin})
     dispatch({type:SEARCH_COURSE_SUCCESS, payload: res.data})
   }catch(error){
     dispatch({type:SEARCH_COURSE_ERROR, payload:error})
   }
 }
+
+export const fetchTeacherCourse =(teacher) => async dispatch =>{
+  try{
+    dispatch({type:FETCH_TEACHER_COURSE})
+    const res = await axios.post("/api/teacher/course", {teacher})
+    dispatch({type:FETCH_TEACHER_COURSE_SUCCESS, payload: res.data})
+  }catch(error){
+    dispatch({type:FETCH_TEACHER_COURSE_ERROR, payload:error})
+  }
+}
+
+export const fetchUserCourse = (id) => async dispatch =>{
+  try{
+    dispatch({type:FETCH_USER_COURSE})
+    const res = await axios.get(`/api/unlockedCourses/${id}`)
+    dispatch({type:FETCH_USER_COURSE_SUCCESS, payload: res.data})
+  }catch(error){
+    dispatch({type:FETCH_USER_COURSE_ERROR, payload:error})
+  }
+}
+
+export const fetchAllTeacher = () => async dispatch =>{
+
+  const res = await axios.get('/api/allTeachers')
+    dispatch({type: FETCH_ALL_TEACHER, payload: res.data})
+}
+
+export const fetchAllStudent = () => async dispatch =>{
+
+  const res = await axios.get('/api/allStudents')
+    dispatch({type: FETCH_ALL_STUDENT, payload: res.data})
+}
+
+
+

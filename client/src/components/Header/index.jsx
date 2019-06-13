@@ -13,7 +13,7 @@ import { searchCourse, clearData } from "../../actions";
 const menu = (
   <Menu>
     <Menu.Item>
-      <a rel="noopener noreferrer" href="http://www.alipay.com/">
+      <a rel="noopener noreferrer" href="/profile">
         My Profile
       </a>
     </Menu.Item>
@@ -60,7 +60,7 @@ class Header extends React.Component {
 
   search = v => {
     console.log("search", v);
-    this.props.searchCourse(v);
+    this.props.searchCourse(v, this.props.auth.isAdmin);
     this.props.history.push("/search/courses");
   };
 
@@ -85,6 +85,8 @@ class Header extends React.Component {
               <Link to="/add-teacher">
                 <Button ghost>Add Teacher</Button>
               </Link>
+            ) : this.props.auth.isTeacher ? (
+              ""
             ) : (
               <Payments />
             )}
@@ -94,6 +96,8 @@ class Header extends React.Component {
               <Link to="/add-course">
                 <Button ghost>Add Course</Button>
               </Link>
+            ) : this.props.auth.isTeacher ? (
+              ""
             ) : (
               <Button
                 color="primary"
@@ -106,7 +110,7 @@ class Header extends React.Component {
           <Menu.Item key="profile" style={{ float: "right" }}>
             <Dropdown overlay={menu}>
               <div>
-                {this.props.auth.isAdmin || !this.props.auth.isTeacher ? (
+                {!this.props.auth.isTeacher ? (
                   <div>
                     <Avatar
                       src={
@@ -114,7 +118,11 @@ class Header extends React.Component {
                       }
                     />
                     <Icon
-                      style={{ fontWeight: "bold", marginLeft:3, color: "white" }}
+                      style={{
+                        fontWeight: "bold",
+                        marginLeft: 3,
+                        color: "white"
+                      }}
                       type="down"
                     />
                   </div>
@@ -157,29 +165,21 @@ class Header extends React.Component {
               className="customclass"
               style={{ fontSize: 16, color: "white" }}
             >
-              {/* <a
-                style={{ color: "white" }}
-                href={
-                  this.props.auth ? "/home" : "/"
-                }
-              >
-                <Icon type="smile" />
-                Hamro Paathsala
-               
-              </a> */}
               <a href="/home">
-              <img src={logo} className="logo" />
+                <img src={logo} className="logo" />
               </a>
-             
             </Menu.Item>
-
-            <Menu.Item
+            {this.props.auth ?(
+              <Menu.Item
               style={{ fontSize: 16, color: "white" }}
               className="customclass"
               key="search"
             >
               <SearchField search={v => this.search(v)} />
             </Menu.Item>
+            ):
+            ''}
+            
 
             {this.renderContent()}
           </Menu>
@@ -208,7 +208,7 @@ function mapStateToProps({ auth }) {
 }
 
 const mapDispatchToProps = dispatch => ({
-  searchCourse: value => dispatch(searchCourse(value)),
+  searchCourse: (value, isAdmin) => dispatch(searchCourse(value, isAdmin)),
   clearData: () => dispatch(clearData())
 });
 

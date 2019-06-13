@@ -6,7 +6,7 @@ const {Footer} = Layout
 
 const FooterNav = () =>(
     <Footer style={{backgroundColor:'#001529', textAlign:'center', color:'white'}}>
-      Hamro Paathsala ©2018 Created by Swikar Bhattarai
+      ©2019 by <span style={{color:'#2F54EB'}}>Swikar Bhattarai</span> All Rights Reserved
   </Footer>
   
 )

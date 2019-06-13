@@ -8,8 +8,14 @@ import './style.css'
 import { Layout, Carousel, Typography } from 'antd'
 
 
+
+
 class Landing extends React.Component {
+
+  
   render() {
+
+    console.log('auth land', this.props.auth)
     const {
      Content
     } = Layout
@@ -19,15 +25,16 @@ class Landing extends React.Component {
         <Layout>
        
          <Content style={{backgroundColor:'#252324'}}>
-          <Carousel autoplay>
-            <div><img src={Carousel2} style={{height:800, width:'100%'}} /></div>
+          <Carousel autoplay style="darken">
             <div><img src={Carousel1} style={{height:800, width:'100%'}} /></div>
             <div><img src={Carousel3} style={{height:800, width:'100%'}} /></div>
          
           </Carousel>
-          <Wrapper>
-          <Title level={2}>New Courses</Title>
-          </Wrapper>
+          <div style={{display:'flex', flexDirection:'column'}}>
+          <h1 className="text">हाम्रो पाठशाला</h1>
+          <h4 className="caption">"Online learning is not the next big thing, it is the now big thing.” - Donna J. Abernathy</h4>
+          </div>
+        
          </Content>
          
         </Layout>
@@ -36,5 +43,6 @@ class Landing extends React.Component {
     );
   }
 }
+
 
 export default Landing

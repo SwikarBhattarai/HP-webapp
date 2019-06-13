@@ -1,5 +1,9 @@
 # HP-webapp
 Webapp for Hamro Paathshala
 
+
+
 HOW TO RUN??
-npm run dev to run the app.
+
+-- go to project folder
+-- type npm run dev in cmd.

@@ -10,8 +10,6 @@ import {
   Button,
   Upload,
   Icon,
-  notification,
-  message
 } from "antd";
 import { Wrapper } from "../Wrapper";
 import { editCourse, fetchTeachers, updateCourse } from "../../actions";
@@ -38,25 +36,35 @@ class EditCourse extends Component {
       title: "",
       description: "",
       file: "",
-      videos: [{ title: "", description: "", file: "" }]
+      videos: [{ title: "", description: "", file: "" }],
+      file: [
+        {
+         // custom error message to show
+          url: "http://www.baidu.com/yyy.png",
+          
+        }
+      ]
     };
 
     this.handleChange = this.handleChange.bind(this);
   }
 
+  componentWillMount() {
+    const { match } = this.props;
+    this.props.editCourse(match.params.id);
+  }
+
   componentDidMount() {
     this.props.fetchTeachers();
     this.props.editCourse(this.props.match.params.id);
-    window.scrollTo(0,0)
   }
 
   componentDidUpdate(prevProps) {
-    const { match } = this.props
+    const { match } = this.props;
     if (match.params.id !== prevProps.match.params.id) {
-      window.scrollTo(0, 0)
+
     }
   }
-
 
   handleChange(e) {
     this.setState({ courseName: e.target.value });
@@ -72,18 +80,27 @@ class EditCourse extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-
         const data = {
           courseDetails: values,
           videos: this.state.videos
         };
+        this.props.course.course.thumbnail &&
+          this.setState({
+            file: {
+              uid: "1",
+              name: "thumbnail.png",
+              status: "done",
+              response: "Server Error 500", // custom error message to show
+              url: this.props.course.course.thumbnail,
+              listType: "picture"
+            }
+          });
 
         console.log("data", data);
-  
 
-        // this.props.updateCourse(data, this.props.match.params.id);
-      
-        // console.log("course", this.props.course.course);
+        console.log("upload", this.state.fileList);
+
+        this.props.updateCourse(data, this.props.match.params.id);
       }
     });
   };
@@ -219,8 +236,6 @@ class EditCourse extends Component {
       </Form.Item>
     ));
 
-    console.log("editable course", this.props.course.course);
-
     return (
       <Wrapper
         style={{
@@ -234,7 +249,9 @@ class EditCourse extends Component {
             <h1 style={{ textAlign: "center", fontWeight: "bold" }}>
               EDIT{" "}
               <span style={{ color: "red" }}>
-                {this.props.course.course.courseTitle ? this.props.course.course.courseTitle.toUpperCase() : ''}
+                {this.props.course.course.courseTitle
+                  ? this.props.course.course.courseTitle.toUpperCase()
+                  : ""}
               </span>
             </h1>
             <Form {...formItemLayout} onSubmit={this.handleSubmit}>
@@ -335,29 +352,29 @@ class EditCourse extends Component {
                   rules: [
                     { required: true, message: "Feature 1 is required!" }
                   ],
-                  initialValue: this.props.course.course.feature[0]
+                  initialValue: this.props.course.course.feature
+                    ? this.props.course.course.feature[0]
+                    : ""
                 })(<Input placeholder="Feature 1" allowClear />)}
                 {getFieldDecorator("feature2", {
                   rules: [
                     { required: true, message: "Feature 2 is required!" }
                   ],
-                  initialValue: this.props.course.course.feature[1]
+                  initialValue: this.props.course.course.feature
+                    ? this.props.course.course.feature[1]
+                    : ""
                 })(<Input placeholder="Feature 2" allowClear />)}
 
                 <Input placeholder="Feature 3" allowClear />
                 <Input placeholder="Feature 4" allowClear />
                 <Input placeholder="Feature 5" allowClear />
               </Form.Item>
-              <Form.Item label="Upload a Thumbnail">
+              {/* <Form.Item label="Upload a Thumbnail">
                 {getFieldDecorator("thumbnail", {
-                  valuePropName: "file",
-                  getValueFromEvent: this.normFile,
-                  rules: [
-                    
-                  ],
-                  
+                  rules: []
                 })(
                   <Upload
+                    onChange={this.normFile}
                     action="/api/upload"
                     listType="picture"
                     defaultFileList={[
@@ -370,6 +387,7 @@ class EditCourse extends Component {
                         listType: "picture"
                       }
                     ]}
+                  
                   >
                     <Button>
                       <Icon type="upload" /> Click to upload
@@ -386,7 +404,7 @@ class EditCourse extends Component {
                 >
                   <Icon type="plus" /> Add Videos
                 </Button>
-              </Form.Item>
+              </Form.Item> */}
 
               <Divider />
               <Button
@@ -395,7 +413,7 @@ class EditCourse extends Component {
                 size="large"
                 htmlType="submit"
               >
-                {this.props.course.updatedCourse.loading ? <Icon type="loading" /> : ""}
+                {this.props.course.loading ? <Icon type="loading" /> : ""}
                 Submit Course
               </Button>
             </Form>

@@ -19,7 +19,15 @@ import {
   CLEAR_DATA,
   SEARCH_COURSE,
   SEARCH_COURSE_SUCCESS,
-  SEARCH_COURSE_ERROR
+  SEARCH_COURSE_ERROR,
+  FETCH_TEACHER_COURSE,
+  FETCH_TEACHER_COURSE_SUCCESS,
+  UNLOCK_COURSE,
+  UNLOCK_COURSE_SUCCESS,
+  UNLOCK_COURSE_ERROR,
+  FETCH_USER_COURSE,
+  FETCH_USER_COURSE_SUCCESS,
+  FETCH_USER_COURSE_ERROR
 } from "../actions/types";
 
 export default function(
@@ -33,6 +41,9 @@ export default function(
     updatedCourse: false,
     deleteStatus: false,
     value: false,
+    teacherCourse:false,
+    unlockedCourse:false,
+    userCourse:false,
   },
   action
 ) {
@@ -188,6 +199,69 @@ export default function(
         error:action.payload,
         value:false,
         loading:false,
+      }
+    case FETCH_TEACHER_COURSE:
+      return {
+        ...state,
+        loading:true,
+        teacherCourse:false,
+        error:false,
+      }
+    case FETCH_TEACHER_COURSE_SUCCESS:
+      return {
+        ...state,
+        loading:false,
+        error:false,
+        teacherCourse:action.payload,
+      }
+    case FETCH_TEACHER_COURSE_SUCCESS:
+      return {
+        ...state,
+        loading:false,
+        error:true,
+        teacherCourse:false,
+      }
+    case UNLOCK_COURSE:
+      return {
+        ...state,
+        loading:true,
+        error:false,
+        unlockedCourse:false,
+      }
+    case UNLOCK_COURSE_SUCCESS:
+      return {
+        ...state,
+        loading:false,
+        error:false,
+        unlockedCourse:action.payload,
+      }
+    case UNLOCK_COURSE_ERROR:
+      return {
+        ...state,
+        loading:false,
+        unlockedCourse:false,
+        error:true,
+      }
+    case FETCH_USER_COURSE:
+      return {
+        ...state,
+        loading:true,
+        userCourse:false,
+        error:false,
+      }
+      case FETCH_USER_COURSE_SUCCESS:
+      return {
+        ...state,
+        loading:false,
+        userCourse:action.payload,
+        error:false,
+      }
+      case FETCH_USER_COURSE_ERROR:
+      return {
+        ...state,
+        loading:true,
+        userCourse:false,
+        error:action.payload,
       }
     default:
       return state;

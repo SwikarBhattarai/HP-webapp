@@ -6,7 +6,6 @@ const CourseSchema = new Schema({
   courseTitle: String,
   teacher: String,
   coursePrice: Number,
-  status: {type:String, default:'locked'},
   totalVideos: Number,
   totalDuration: Number,
   courseLevel: String,

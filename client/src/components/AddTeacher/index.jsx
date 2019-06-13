@@ -5,14 +5,6 @@ import { Wrapper } from "../Wrapper";
 import { addTeacher } from "../../actions";
 import { connect } from "react-redux";
 
-const openNotification = () => {
-  notification.open({
-    message: 'Notification Title',
-    description: 'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-    icon: <Icon type="smile" style={{ color: '#108ee9' }} />,
-  });
-};
-
 class AddTeacherForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
@@ -20,9 +12,6 @@ class AddTeacherForm extends Component {
       if (!err) {
         console.log("Received values of form: ", values);
         this.props.addTeacher(values);
-        if(!this.props.teacher.loading){
-          openNotification('success')
-        }
       }
     });
   };
@@ -76,15 +65,30 @@ class AddTeacherForm extends Component {
             </Form.Item>
 
             <Divider />
-            <Button
-              style={{ right: 0, float: "right", marginTop: 10 }}
-              type="primary"
-              size="large"
-              htmlType="submit"
-            >
-              {this.props.teacher.loading ? <Icon type="loading" /> : ""}
-              Add Teacher
-            </Button>
+            {this.props.teacher.loading ? (
+              <div>
+                <Button
+                  style={{ right: 0, float: "right", marginTop: 10 }}
+                  type="primary"
+                  size="large"
+                  htmlType="submit"
+                  disabled
+                >
+                  <Icon type="loading" /> Add Teacher
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <Button
+                  style={{ right: 0, float: "right", marginTop: 10 }}
+                  type="primary"
+                  size="large"
+                  htmlType="submit"
+                >
+                  Add Teacher
+                </Button>
+              </div>
+            )}
           </Form>
         </Card>
       </Wrapper>

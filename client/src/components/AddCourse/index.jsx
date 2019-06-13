@@ -65,8 +65,10 @@ class AddCourseForm extends Component {
 
   normFile = e => {
     console.log("Upload event:", e);
-
-    return e.file.thumbUrl;
+    if (e.file.status === "done") {
+      const response = e.file.response.url;
+      return response;
+    }
   };
 
   handleSubmit = e => {
@@ -221,15 +223,6 @@ class AddCourseForm extends Component {
             <Icon type="upload" /> Click to upload
           </Button>
         </Upload>
-
-        {/* 
-        {keys.length > 1 ? (
-          <Icon
-            className="dynamic-delete-button"
-            type="minus-circle-o"
-            onClick={() => this.remove(k)}
-          />
-        ) : null} */}
       </Form.Item>
     ));
 

@@ -41,8 +41,8 @@ export const Title = ({ children, ...props }) => (
       style={{
         marginTop:20,
         marginBottom:15,
-        color: '#383838',
-        fontSize: 22,
+        color: '#555353',
+        fontSize: 24,
         fontWeight:'bold',
       }}
     >

@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetchUser } from "../../actions";
+
+import { Layout } from "antd";
+
 import FooterNav from "../Footer";
 import Header from "../Header";
 import Landing from "../LandingPage";
@@ -10,14 +13,13 @@ import StudentCourseVideoPage from "../StudentCourseVideoPage";
 
 import AdminHomePage from "../AdminHomePage";
 import TeacherHomePage from "../TeacherHomePage";
-import { Layout } from "antd";
-
-import "./app.css";
-import { Affix } from "antd";
 import AddCourse from "../AddCourse";
 import AddTeacher from "../AddTeacher";
 import EditCourse from "../EditCourse";
 import SearchPage from "../SearchPage";
+import ProfilePage from '../ProfilePage';
+
+import "./app.css";
 
 class App extends Component {
   componentDidMount() {
@@ -33,23 +35,25 @@ class App extends Component {
           <Route exact path="/" component={AdminHomePage} />,
           <Route exact path="/add-course" component={AddCourse} />,
           <Route exact path="/add-teacher" component={AddTeacher} />,
-          <Route exact path="/:id/edit" component={EditCourse} />
+          <Route exact path="/:id/edit" component={EditCourse} />,
+          <Route
+          exact
+          key="search"
+          path="/search/courses"
+          component={SearchPage}
+        />,
+        <Route exact key="profile" path="/profile" component={ProfilePage} />
         ];
       } else if (this.props.auth.isTeacher) {
         return [
           <Route exact path="/home" component={TeacherHomePage} />,
-          <Route exact path="/" component={TeacherHomePage} />
+          <Route exact path="/" component={TeacherHomePage} />,
+          <Route exact key="profile" path="/profile" component={ProfilePage} />
         ];
       } else {
         return [
           <Route exact key="home" path="/home" component={StudentHomePage} />,
           <Route exact key="home" path="/" component={StudentHomePage} />,
-          // <Route
-          //   exact
-          //   key="video"
-          //   path="/course/:courseId"
-          //   component={StudentCourseVideoPage}
-          // />,
           <Route
             path="/course/:courseId/video/:videoId"
             component={StudentCourseVideoPage}
@@ -60,6 +64,12 @@ class App extends Component {
               key="search"
               path="/search/courses"
               component={SearchPage}
+            />
+             <Route
+              exact
+              key="profile"
+              path="/profile"
+              component={ProfilePage}
             />
           </Switch>
         ];
@@ -73,8 +83,7 @@ class App extends Component {
     if (this.props.auth) {
       console.log(this.props.auth.isAdmin);
     }
-    const { Content } = Layout;
-
+  
     return (
       <div className="app">
         <BrowserRouter>

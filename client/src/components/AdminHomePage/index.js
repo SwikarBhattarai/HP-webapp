@@ -4,7 +4,7 @@ import { withRouter, Redirect } from "react-router-dom";
 import { Wrapper, Title, ContentDiv } from "../Wrapper";
 import { List } from "antd";
 import CourseCard from "../CourseCard";
-import { fetchCourse, editCourse, deleteCourse } from "../../actions";
+import { fetchCourse, editCourse, deleteCourse, fetchAllTeacher, fetchAllStudent } from "../../actions";
 import { message, Spin } from "antd";
 import "./style.css";
 
@@ -14,9 +14,13 @@ class AdminHomePage extends Component {
   state = {
     loading: false
   };
-  componentDidMount() {
+  componentWillMount() {
     this.props.fetchCourse();
+    this.props.fetchAllTeacher();
+    this.props.fetchAllStudent();
   }
+
+ 
 
   cancel = () => {
     message.error("Cancelled");
@@ -44,11 +48,20 @@ class AdminHomePage extends Component {
     this.props.history.push(`/${item._id}/edit`);
   };
   render() {
+ 
     return (
       <Wrapper>
         <Title>Welcome HP Admin,</Title>
         <ContentDiv>
-          <ColorCard />
+          <ColorCard
+            section1="Courses"
+            section2="Teachers"
+            section3="Students"
+            value1={this.props.course.course.length}
+            value2={this.props.teacher.allTeacher.length}
+            value3={this.props.teacher.allStudent.length}
+            icon3="team"
+          />
         </ContentDiv>
         {this.props.course.course ? (
           <ContentDiv>
@@ -96,14 +109,16 @@ class AdminHomePage extends Component {
   }
 }
 
-function mapStateTopProps({ course }) {
-  return { course };
+function mapStateTopProps({ course, teacher }) {
+  return { course, teacher };
 }
 
 const mapDispatchToProps = dispatch => ({
   fetchCourse: () => dispatch(fetchCourse()),
   editCourse: id => dispatch(editCourse(id)),
-  deleteCourse: id => dispatch(deleteCourse(id))
+  deleteCourse: id => dispatch(deleteCourse(id)),
+  fetchAllTeacher:() => dispatch(fetchAllTeacher()),
+  fetchAllStudent:() => dispatch(fetchAllStudent())
 });
 
 export default withRouter(

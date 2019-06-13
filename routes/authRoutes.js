@@ -49,7 +49,12 @@ module.exports = app => {
     passport.authenticate('local'),
     async (req, res) => {
       console.log('api', req.user)
-      res.send(req.user);
+      if(req.user){
+        res.send(req.user);
+      }else{
+        res.redirect('/')
+      }
+      
     }
   );
 
@@ -63,13 +68,16 @@ module.exports = app => {
   });
 
   app.get("/api/logout", (req, res) => {
+   
     req.logout();
-    res.redirect("/");
+    req.session=null;
+    res.redirect("/")
   });
 
   app.get("/api/current_user", (req, res) => {
     res.send(req.user);
   });
+
 
   app.post(`/api/current_user/update`, async (req, res) => {
     req.user.credits = req.body.amount;

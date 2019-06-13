@@ -1,9 +1,11 @@
-import { ADD_TEACHER, ADD_TEACHER_SUCCESS, ADD_TEACHER_ERROR} from '../actions/types'
+import { ADD_TEACHER, ADD_TEACHER_SUCCESS, ADD_TEACHER_ERROR, FETCH_ALL_TEACHER, FETCH_ALL_STUDENT} from '../actions/types'
 
 export default function(state = {
   teacher: false,
   loading:false,
   error: false,
+  allTeacher:false,
+  allStudent:false,
 
 }, action) {
   
@@ -28,6 +30,16 @@ export default function(state = {
         teacher:false,
         error:action.payload,
         loading:false,
+      }
+    case FETCH_ALL_TEACHER:
+      return{
+        ...state,
+        allTeacher: action.payload
+      }
+    case FETCH_ALL_STUDENT:
+      return{
+        ...state,
+        allStudent: action.payload
       }
     default:
       return state;

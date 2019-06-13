@@ -30,4 +30,13 @@ export const CLEAR_DATA = "clear_data"
 export const SEARCH_COURSE = "search_course"
 export const SEARCH_COURSE_SUCCESS = "search_course_success"
 export const SEARCH_COURSE_ERROR = "search_course_error"
+export const FETCH_TEACHER_COURSE = "fetch_teacher_course"
+export const FETCH_TEACHER_COURSE_SUCCESS = "fetch_teacher_course_success"
+export const FETCH_TEACHER_COURSE_ERROR = "fetch_teacher_course_error"
+export const FETCH_USER_COURSE ="fetch_user_course"
+export const FETCH_USER_COURSE_SUCCESS ="fetch_user_course_success"
+export const FETCH_USER_COURSE_ERROR ="fetch_user_course_error"
+export const FETCH_ALL_TEACHER = "fetch_all_teacher"
+export const FETCH_ALL_STUDENT = "fetch_all_student"
+
 

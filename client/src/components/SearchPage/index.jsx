@@ -15,15 +15,16 @@ class SearchPage extends Component {
     console.log("value", this.props.course);
     const { value, loading } = this.props.course;
 
-    console.log('object',  typeof value ==="array")
+    console.log('recive', value)
+    console.log('object',  typeof value.course)
     return (
       <div>
-        {typeof value !== Object ? (
+        {typeof value.course !== Object ? (
           <div>
             {!loading ? (
               <Wrapper>
                 <ContentDiv>
-                  {value ? (
+                  {value.course ? (
                     <div>
                       <Title style={{ marginBottom: 15 }}>
                         Searched Courses!
@@ -39,7 +40,7 @@ class SearchPage extends Component {
                           xl: 4,
                           xxl: 3
                         }}
-                        dataSource={value}
+                        dataSource={value.course}
                         renderItem={item => (
                           <List.Item>
                             <CourseCard
@@ -47,7 +48,7 @@ class SearchPage extends Component {
                               teacherName={item.teacher}
                               price={item.coursePrice}
                               level={item.courseLevel}
-                              status={item.status}
+                              status={value.status}
                               totalVideos={item.totalVideos}
                               totalDuration={item.totalDuration}
                               description={item.description}
